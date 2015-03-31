@@ -2,7 +2,24 @@
 //  OpenShift sample Node application
 var express = require('express');
 var fs      = require('fs');
+var mongoose = require('mongoose');
 
+var EnergiaSchema = mongoose.Schema({
+    ts: Date,
+    dem: Number,
+    nuc: Number,
+    gf: Number,
+    car: Number,
+    cc: Number,
+    hid: Number,
+    eol: Number,
+    aut: Number,
+    inter: Number,
+    icb: Number,
+    sol: Number
+});
+
+var Energia = mongoose.model('energia', EnergiaSchema);
 
 /**
  *  Define the sample application.
@@ -24,6 +41,7 @@ var SampleApp = function() {
         //  Set the environment variables we need.
         self.ipaddress = process.env.OPENSHIFT_NODEJS_IP;
         self.port      = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+        self.mongoUrl  = process.env.OPENSHIFT_MONGODB_DB_URL || "mongodb://localhost:27017/energia";
 
         if (typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
@@ -32,27 +50,6 @@ var SampleApp = function() {
             self.ipaddress = "127.0.0.1";
         };
     };
-
-
-    /**
-     *  Populate the cache.
-     */
-    self.populateCache = function() {
-        if (typeof self.zcache === "undefined") {
-            self.zcache = { 'index.html': '' };
-        }
-
-        //  Local cache for static content.
-        self.zcache['index.html'] = fs.readFileSync('./index.html');
-    };
-
-
-    /**
-     *  Retrieve entry (content) from cache.
-     *  @param {string} key  Key identifying content to retrieve from cache.
-     */
-    self.cache_get = function(key) { return self.zcache[key]; };
-
 
     /**
      *  terminator === the termination handler
@@ -84,31 +81,18 @@ var SampleApp = function() {
         });
     };
 
+    self.setupMongoose = function(callback) {
+        self.db = mongoose.connect(self.mongoUrl, function(err) {
+            if (err) {
+                console.error('Could not connect to MongoDB!');
+                console.log(err);
+                callback(err);
+            } else {
+                callback(null);
+            }
 
-    /*  ================================================================  */
-    /*  App server functions (main app logic here).                       */
-    /*  ================================================================  */
-
-    /**
-     *  Create the routing table entries + handlers for the application.
-     */
-    self.createRoutes = function() {
-        self.routes = { };
-
-        self.routes['/asciimo'] = function(req, res) {
-            var link = "http://i.imgur.com/kmbjB.png";
-            res.send("<html><body><img src='" + link + "'></body></html>");
-        };
-
-        self.routes['/'] = function(req, res) {
-            res.setHeader('Content-Type', 'text/html');
-            res.send(self.cache_get('index.html') );
-        };
-
-        self.routes['/foo'] = function(req, res) {
-            res.send({ bar: 1});
-        }
-    };
+        });
+    }
 
 
     /**
@@ -116,26 +100,34 @@ var SampleApp = function() {
      *  the handlers.
      */
     self.initializeServer = function() {
-        self.createRoutes();
         self.app = express();
 
-        //  Add handlers for the app (from the routes).
-        for (var r in self.routes) {
-            self.app.get(r, self.routes[r]);
-        }
+        self.app.get('/populate', function(req, res) {
+            new Energia({
+                ts: Date(),
+                dem: 25
+            }).save(function(err, record) {
+                if (err) {
+                    res.send({ error: err });
+                    return;
+                }
+                res.send({ success: record });
+            })
+        });
     };
 
 
     /**
      *  Initializes the sample application.
      */
-    self.initialize = function() {
+    self.initialize = function(callback) {
         self.setupVariables();
-        self.populateCache();
         self.setupTerminationHandlers();
-
-        // Create the express server and routes.
-        self.initializeServer();
+        self.setupMongoose(function() {
+            // Create the express server and routes.
+            self.initializeServer();    
+            callback();
+        });
     };
 
 
@@ -152,12 +144,12 @@ var SampleApp = function() {
 
 };   /*  Sample Application.  */
 
-
-
 /**
  *  main():  Main code.
  */
 var zapp = new SampleApp();
-zapp.initialize();
-zapp.start();
+zapp.initialize(function() {
+    zapp.start();    
+});
+
 
