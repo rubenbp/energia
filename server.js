@@ -41,7 +41,7 @@ var SampleApp = function() {
         //  Set the environment variables we need.
         self.ipaddress = process.env.OPENSHIFT_NODEJS_IP;
         self.port      = process.env.OPENSHIFT_NODEJS_PORT || 8080;
-        self.mongoUrl  = process.env.OPENSHIFT_MONGODB_DB_URL || "mongodb://localhost:27017/energia";
+        self.mongoUrl  = (process.env.OPENSHIFT_MONGODB_DB_URL || "mongodb://localhost:27017/" + "energia";
 
         if (typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
