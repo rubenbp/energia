@@ -53,8 +53,6 @@ var SampleApp = function() {
       console.warn('No OPENSHIFT_NODEJS_IP var, using 127.0.0.1');
       self.ipaddress = "127.0.0.1";
     };
-
-    moment.tz.setDefault("Europe/Madrid");
   };
 
   /**
@@ -116,7 +114,7 @@ var SampleApp = function() {
 
     self.app.get('/populate/', function(req, res) {
       var today = moment().format('YYYY-MM-DD');
-      console.log("Obteniendo datos de fecha: " + today);
+      console.log("Obteniendo datos de fecha: " + today;
 
       populateRequest(today, req, res);
     });
@@ -178,8 +176,11 @@ var SampleApp = function() {
       var desde = moment().subtract(24, 'hours');
       var hasta = moment();
 
+      console.log("desde: " + desde.toDate());
+      console.log("hasta: " + hasta.toDate());
+
       Energia
-        .where('ts').gte(desde).lte(hasta)
+        .where('ts').gte(desde.toDate()).lte(hasta.toDate())
         .sort({ ts: 'desc' })
         .exec(function(err, data) {
           res.json(data);
@@ -189,6 +190,10 @@ var SampleApp = function() {
     self.app.get('/data/:desde/:hasta', function(req, res) {
       var desde = moment(req.params.desde).startOf('day');
       var hasta = moment(req.params.hasta).endOf('day');
+
+      console.log("desde: " + desde.toDate());
+      console.log("hasta: " + hasta.toDate());
+      
       Energia
         .where('ts').gte(desde.toDate()).lte(hasta.toDate())
         .sort({ ts: 'desc' })
@@ -226,7 +231,7 @@ var SampleApp = function() {
       var data = JSON.parse(dataRaw);
 
       async.forEach(data.valoresHorariosGeneracion, function(valorEnHora, callback) {
-        valorEnHora.ts = moment(valorEnHora.ts).toDate();
+        valorEnHora.ts = moment.tz(valorEnHora.ts, "Europe/Madrid").toDate();
 
         Energia.findOneAndUpdate(
           { ts: valorEnHora.ts },
