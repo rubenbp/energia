@@ -122,7 +122,7 @@ var SampleApp = function() {
     self.app.get('/populate/year/:year', function(req, res) {
       console.log("Petición para obtener datos del año " + req.params.year);
 
-      var currentDay = moment(req.params.year).tz("Europe/Madrid");
+      var currentDay = moment.tz(req.params.year, "Europe/Madrid");
       console.log("Primer día: " + currentDay.toDate());
 
       res.set('Content-Type', 'text/html');
@@ -148,7 +148,7 @@ var SampleApp = function() {
     });
 
     self.app.get('/populate/month/:year/:month', function(req, res) {
-      var currentDay = moment(req.params.year + "-" + req.params.month).tz("Europe/Madrid");
+      var currentDay = moment.tz(req.params.year + "-" + req.params.month, "Europe/Madrid");
 
       res.set('Content-Type', 'text/html');
 
@@ -224,7 +224,7 @@ var SampleApp = function() {
       var data = JSON.parse(dataRaw);
 
       async.forEach(data.valoresHorariosGeneracion, function(valorEnHora, callback) {
-        valorEnHora.ts = moment(valorEnHora.ts).tz("Europe/Madrid").toDate();
+        valorEnHora.ts = moment.tz(valorEnHora.ts, "Europe/Madrid").toDate();
 
         Energia.findOneAndUpdate(
           { ts: valorEnHora.ts },
