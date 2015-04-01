@@ -148,7 +148,7 @@ var SampleApp = function() {
     });
 
     self.app.get('/populate/month/:year/:month', function(req, res) {
-      var currentDay = moment.(req.params.year + "-" + req.params.month).tz("Europe/Madrid");
+      var currentDay = moment(req.params.year + "-" + req.params.month).tz("Europe/Madrid");
 
       res.set('Content-Type', 'text/html');
 
