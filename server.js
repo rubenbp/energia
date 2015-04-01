@@ -117,7 +117,10 @@ var SampleApp = function() {
     });
 
     self.app.get('/populate/year/:year', function(req, res) {
+      console.log("Petición para obtener datos del año " + req.params.year);
+
       var currentDay = moment(req.params.year).startOf('year');
+      console.log("Primer día: " + currentDay.toDate());
 
       res.set('Content-Type', 'text/html');
 
