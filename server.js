@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 var request = require('request');
 var moment = require('moment');
 var async = require('async');
+var cors = require('cors');
 
 var EnergiaSchema = mongoose.Schema({
   ts: Date,
@@ -105,6 +106,8 @@ var SampleApp = function() {
   self.initializeServer = function() {
     self.app = express();
 
+    self.app.use(cors());
+
     self.app.get('/populate/:date', function(req, res) {
       populateRequest(req.params.date, req, res);
     });
@@ -177,7 +180,7 @@ var SampleApp = function() {
         .where('ts').gte(desde).lte(hasta)
         .sort({ ts: 'desc' })
         .exec(function(err, data) {
-          res.send(data);
+          res.json(data);
         });
     });
 
@@ -188,7 +191,7 @@ var SampleApp = function() {
         .where('ts').gte(desde.toDate()).lte(hasta.toDate())
         .sort({ ts: 'desc' })
         .exec(function(err, data) {
-          res.send(data);
+          res.json(data);
         });
     });
   };
