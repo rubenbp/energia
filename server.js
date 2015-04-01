@@ -4,7 +4,7 @@ var express = require('express');
 var fs      = require('fs');
 var mongoose = require('mongoose');
 var request = require('request');
-var moment = require('moment');
+var moment = require('moment-timezone');
 var async = require('async');
 var cors = require('cors');
 
@@ -113,7 +113,7 @@ var SampleApp = function() {
     });
 
     self.app.get('/populate/', function(req, res) {
-      var today = moment().format('YYYY-MM-DD');
+      var today = moment().tz("Europe/Madrid").format('YYYY-MM-DD');
       console.log("Obteniendo datos de fecha: " + today);
 
       populateRequest(today, req, res);
@@ -122,7 +122,7 @@ var SampleApp = function() {
     self.app.get('/populate/year/:year', function(req, res) {
       console.log("Petición para obtener datos del año " + req.params.year);
 
-      var currentDay = moment.utc(req.params.year);
+      var currentDay = moment(req.params.year).tz("Europe/Madrid");
       console.log("Primer día: " + currentDay.toDate());
 
       res.set('Content-Type', 'text/html');
@@ -148,7 +148,7 @@ var SampleApp = function() {
     });
 
     self.app.get('/populate/month/:year/:month', function(req, res) {
-      var currentDay = moment.utc(req.params.year + "-" + req.params.month);
+      var currentDay = moment.(req.params.year + "-" + req.params.month).tz("Europe/Madrid");
 
       res.set('Content-Type', 'text/html');
 
@@ -173,8 +173,8 @@ var SampleApp = function() {
     });
 
     self.app.get('/data/last24h', function(req, res) {
-      var desde = moment().subtract(24, 'hours');
-      var hasta = moment();
+      var desde = moment().tz("Europe/Madrid").subtract(24, 'hours');
+      var hasta = moment().tz("Europe/Madrid");
 
       Energia
         .where('ts').gte(desde).lte(hasta)
@@ -224,7 +224,7 @@ var SampleApp = function() {
       var data = JSON.parse(dataRaw);
 
       async.forEach(data.valoresHorariosGeneracion, function(valorEnHora, callback) {
-        valorEnHora.ts = moment.utc(valorEnHora.ts).toDate();
+        valorEnHora.ts = moment(valorEnHora.ts).tz("Europe/Madrid").toDate();
 
         Energia.findOneAndUpdate(
           { ts: valorEnHora.ts },
