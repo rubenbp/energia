@@ -145,7 +145,7 @@ var SampleApp = function() {
     });
 
     self.app.get('/populate/month/:year/:month', function(req, res) {
-      var currentDay = moment(req.params.year + "-" + req.params.month).startOf('month');
+      var currentDay = moment(req.params.year + "-" + req.params.month);
 
       res.set('Content-Type', 'text/html');
 
