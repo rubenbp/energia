@@ -179,11 +179,10 @@ var SampleApp = function() {
     });
 
     self.app.get('/data/:desde/:hasta', function(req, res) {
-      var desde = moment(req.params.desde).startOf('day');
-      var hasta = moment(req.params.hasta).endOf('day');
-
+      var desde = moment.utc(req.params.desde).startOf('day');
+      var hasta = moment.utc(req.params.hasta).endOf('day');
       Energia
-        .where('ts').gte(desde).lte(hasta)
+        .where('ts').gte(desde.toDate()).lte(hasta.toDate())
         .sort({ ts: 'desc' })
         .exec(function(err, data) {
           res.send(data);
@@ -218,10 +217,9 @@ var SampleApp = function() {
       var dataRaw = body.substring(3, body.length - 2);
       var data = JSON.parse(dataRaw);
 
-      var registro = data.valoresHorariosGeneracion[0]
-      registro.ts = moment(registro.ts);
-
       async.forEach(data.valoresHorariosGeneracion, function(valorEnHora, callback) {
+        valorEnHora.ts = moment.utc(valorEnHora.ts).toDate();
+
         Energia.findOneAndUpdate(
           { ts: valorEnHora.ts },
           valorEnHora,
