@@ -53,6 +53,8 @@ var SampleApp = function() {
       console.warn('No OPENSHIFT_NODEJS_IP var, using 127.0.0.1');
       self.ipaddress = "127.0.0.1";
     };
+
+    moment.tz.setDefault("Europe/Madrid");
   };
 
   /**
@@ -113,7 +115,7 @@ var SampleApp = function() {
     });
 
     self.app.get('/populate/', function(req, res) {
-      var today = moment().tz("Europe/Madrid").format('YYYY-MM-DD');
+      var today = moment().format('YYYY-MM-DD');
       console.log("Obteniendo datos de fecha: " + today);
 
       populateRequest(today, req, res);
@@ -122,7 +124,7 @@ var SampleApp = function() {
     self.app.get('/populate/year/:year', function(req, res) {
       console.log("Petición para obtener datos del año " + req.params.year);
 
-      var currentDay = moment.tz(req.params.year, "Europe/Madrid");
+      var currentDay = moment(req.params.year);
       console.log("Primer día: " + currentDay.toDate());
 
       res.set('Content-Type', 'text/html');
@@ -148,7 +150,7 @@ var SampleApp = function() {
     });
 
     self.app.get('/populate/month/:year/:month', function(req, res) {
-      var currentDay = moment.tz(req.params.year + "-" + req.params.month, "Europe/Madrid");
+      var currentDay = moment(req.params.year + "-" + req.params.month);
 
       res.set('Content-Type', 'text/html');
 
@@ -173,8 +175,8 @@ var SampleApp = function() {
     });
 
     self.app.get('/data/last24h', function(req, res) {
-      var desde = moment().tz("Europe/Madrid").subtract(24, 'hours');
-      var hasta = moment().tz("Europe/Madrid");
+      var desde = moment().subtract(24, 'hours');
+      var hasta = moment();
 
       Energia
         .where('ts').gte(desde).lte(hasta)
@@ -185,8 +187,8 @@ var SampleApp = function() {
     });
 
     self.app.get('/data/:desde/:hasta', function(req, res) {
-      var desde = moment.utc(req.params.desde).startOf('day');
-      var hasta = moment.utc(req.params.hasta).endOf('day');
+      var desde = moment(req.params.desde).startOf('day');
+      var hasta = moment(req.params.hasta).endOf('day');
       Energia
         .where('ts').gte(desde.toDate()).lte(hasta.toDate())
         .sort({ ts: 'desc' })
@@ -224,7 +226,7 @@ var SampleApp = function() {
       var data = JSON.parse(dataRaw);
 
       async.forEach(data.valoresHorariosGeneracion, function(valorEnHora, callback) {
-        valorEnHora.ts = moment.tz(valorEnHora.ts, "Europe/Madrid").toDate();
+        valorEnHora.ts = moment(valorEnHora.ts).toDate();
 
         Energia.findOneAndUpdate(
           { ts: valorEnHora.ts },
