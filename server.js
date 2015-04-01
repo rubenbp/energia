@@ -114,7 +114,7 @@ var SampleApp = function() {
 
     self.app.get('/populate/', function(req, res) {
       var today = moment().format('YYYY-MM-DD');
-      console.log("Obteniendo datos de fecha: " + today;
+      console.log("Obteniendo datos de fecha: " + today);
 
       populateRequest(today, req, res);
     });
@@ -193,7 +193,7 @@ var SampleApp = function() {
 
       console.log("desde: " + desde.toDate());
       console.log("hasta: " + hasta.toDate());
-      
+
       Energia
         .where('ts').gte(desde.toDate()).lte(hasta.toDate())
         .sort({ ts: 'desc' })
