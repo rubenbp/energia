@@ -7,7 +7,7 @@ var Energia = require('./energia');
 module.exports = function populate(date, callback) {
   var sourceBaseUrl = "https://demanda.ree.es/WSvisionaMovilesPeninsulaRest/resources/demandaGeneracionPeninsula?callback=cb&curva=DEMANDA&fecha=";
   var dataUrl = sourceBaseUrl + date;
-  console.log("Guardando datos de " + dataUrl);
+  console.log("Guardando datos del día " + date);
 
   request(dataUrl, function(error, response, body) {
     if (error || response.statusCode != 200) {
