@@ -5,9 +5,9 @@ fi
 if [[ $(find $OPENSHIFT_DATA_DIR/last_run -mmin +4) ]]; then #run every 5 mins
   rm -f $OPENSHIFT_DATA_DIR/last_run
   touch $OPENSHIFT_DATA_DIR/last_run
-  
+
   # The command(s) that you want to run every 5 minutes
   cd $OPENSHIFT_REPO_DIR
   node cron-populate.js >> ${OPENSHIFT_NODEJS_LOG_DIR}/cron-populate.log 2>&1
 fi
-
+ 
