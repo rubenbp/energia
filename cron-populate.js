@@ -2,15 +2,28 @@
 
 var populate = require('./populate');
 var moment = require('moment-timezone');
+var mongoUrl  = (process.env.OPENSHIFT_MONGODB_DB_URL || "mongodb://localhost:27017/") + "energia";
 
-console.log(moment.tz("Europe/Madrid").toDate() + "---------------------------------------------");
+
+console.log(moment.tz("Europe/Madrid").format() + "---------------------------------------------");
 console.log("Iniciando tarea CRON de rellenado de datos");
 
 var today = moment().tz("Europe/Madrid").format('YYYY-MM-DD');
 console.log("Obteniendo datos de fecha: " + today);
 
-populate(today, function(err) {
-  if (err) console.error("Error al obtener o guardar los datos: " + err);
+
+mongoose.connect(self.mongoUrl, function(err) {
+  if (err) {
+    console.error('Could not connect to MongoDB!');
+    console.log(err);
+    return callback(err);
+  } 
+
+  populate(today, function(err) {
+    if (err) console.error("Error al obtener o guardar los datos: " + err);
+  });
+
 });
+
 
 console.log("Finalizada tarea CRON");
