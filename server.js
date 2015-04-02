@@ -122,7 +122,7 @@ var SampleApp = function() {
     self.app.get('/populate/year/:year', function(req, res) {
       console.log("Petición para obtener datos del año " + req.params.year);
 
-      var currentDay = moment(req.params.year);
+      var currentDay = moment.tz(req.params.year, "Europe/Madrid");
       console.log("Primer día: " + currentDay.toDate());
 
       res.set('Content-Type', 'text/html');
@@ -148,7 +148,7 @@ var SampleApp = function() {
     });
 
     self.app.get('/populate/month/:year/:month', function(req, res) {
-      var currentDay = moment(req.params.year + "-" + req.params.month);
+      var currentDay = moment.tz(req.params.year + "-" + req.params.month, "Europe/Madrid");
 
       res.set('Content-Type', 'text/html');
 
@@ -188,8 +188,8 @@ var SampleApp = function() {
     });
 
     self.app.get('/data/:desde/:hasta', function(req, res) {
-      var desde = moment(req.params.desde).startOf('day');
-      var hasta = moment(req.params.hasta).endOf('day');
+      var desde = moment.tz(req.params.desde, "Europe/Madrid").startOf('day');
+      var hasta = moment.tz(req.params.hasta, "Europe/Madrid").endOf('day');
 
       console.log("desde: " + desde.toDate());
       console.log("hasta: " + hasta.toDate());
