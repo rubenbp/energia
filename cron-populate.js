@@ -1,5 +1,6 @@
 #!/bin/env node
 
+var mongoose = require('mongoose');
 var populate = require('./populate');
 var moment = require('moment-timezone');
 var mongoUrl  = (process.env.OPENSHIFT_MONGODB_DB_URL || "mongodb://localhost:27017/") + "energia";
@@ -12,18 +13,16 @@ var today = moment().tz("Europe/Madrid").format('YYYY-MM-DD');
 console.log("Obteniendo datos de fecha: " + today);
 
 
-mongoose.connect(self.mongoUrl, function(err) {
+mongoose.connect(mongoUrl, function(err) {
   if (err) {
     console.error('Could not connect to MongoDB!');
     console.log(err);
-    return callback(err);
+    return;
   } 
 
   populate(today, function(err) {
     if (err) console.error("Error al obtener o guardar los datos: " + err);
+    console.log("Finalizada tarea CRON");
+    process.exit();
   });
-
 });
-
-
-console.log("Finalizada tarea CRON");
