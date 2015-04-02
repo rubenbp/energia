@@ -1,2 +1,2 @@
 cd $OPENSHIFT_REPO_DIR
-node cron-populate.js >>cron.txt 2>&1
+node cron-populate.js >> ${OPENSHIFT_NODEJS_LOG_DIR}/cron-populate.log 2>&1
