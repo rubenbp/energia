@@ -3,27 +3,13 @@
 var express = require('express');
 var fs      = require('fs');
 var mongoose = require('mongoose');
-var request = require('request');
+
 var moment = require('moment-timezone');
 var async = require('async');
 var cors = require('cors');
 
-var EnergiaSchema = mongoose.Schema({
-  ts: Date,
-  dem: Number,
-  nuc: Number,
-  gf: Number,
-  car: Number,
-  cc: Number,
-  hid: Number,
-  eol: Number,
-  aut: Number,
-  inter: Number,
-  icb: Number,
-  sol: Number
-});
-
-var Energia = mongoose.model('energia', EnergiaSchema);
+var Energia = require('./energia');
+var populate = require('./populate');
 
 /**
  *  Define the sample application.
@@ -213,44 +199,7 @@ var SampleApp = function() {
     })
   }
 
-  function populate(date, callback) {
-    var sourceBaseUrl = "https://demanda.ree.es/WSvisionaMovilesPeninsulaRest/resources/demandaGeneracionPeninsula?callback=cb&curva=DEMANDA&fecha=";
-    var dataUrl = sourceBaseUrl + date;
-    console.log("Guardando datos de " + dataUrl);
-
-    request(dataUrl, function(error, response, body) {
-      if (error || response.statusCode != 200) {
-        res.send({ error: error, response: response, body: body });
-        return;
-      }
-      if (body == "formato de fecha invalido") {
-        console.log('No hay datos aún para el día ' + date);
-        return callback();
-      }
-      var dataRaw = body.substring(3, body.length - 2);
-      var data = JSON.parse(dataRaw);
-
-      async.forEach(data.valoresHorariosGeneracion, function(valorEnHora, callback) {
-        valorEnHora.ts = moment.tz(valorEnHora.ts, "Europe/Madrid").toDate();
-
-        Energia.findOneAndUpdate(
-          { ts: valorEnHora.ts },
-          valorEnHora,
-          { upsert: true }, 
-          function(err) {
-            if (err) callback(err);
-            callback();
-          });
-      }, function(err) {
-        if (err) return callback(err); 
-        return callback();
-      });
-
-    });
-  }
-
-
-  /**
+    /**
    *  Initializes the sample application.
    */
   self.initialize = function(callback) {

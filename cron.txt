@@ -1,0 +1,13 @@
+Iniciando tarea CRON de rellenado de datos
+Obteniendo datos de fecha: 2015-04-02
+Guardando datos de https://demanda.ree.es/WSvisionaMovilesPeninsulaRest/resources/demandaGeneracionPeninsula?callback=cb&curva=DEMANDA&fecha=2015-04-02
+Finalizada tarea CRON
+Iniciando tarea CRON de rellenado de datos
+Obteniendo datos de fecha: 2015-04-02
+Guardando datos de https://demanda.ree.es/WSvisionaMovilesPeninsulaRest/resources/demandaGeneracionPeninsula?callback=cb&curva=DEMANDA&fecha=2015-04-02
+Finalizada tarea CRON
+Thu Apr 02 2015 02:36:55 GMT+0200 (CEST)---------------------------------------------
+Iniciando tarea CRON de rellenado de datos
+Obteniendo datos de fecha: 2015-04-02
+Guardando datos de https://demanda.ree.es/WSvisionaMovilesPeninsulaRest/resources/demandaGeneracionPeninsula?callback=cb&curva=DEMANDA&fecha=2015-04-02
+Finalizada tarea CRON

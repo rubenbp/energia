@@ -1,0 +1,2 @@
+cd $OPENSHIFT_REPO_DIR
+node cron-populate.js >>cron.txt 2>&1
