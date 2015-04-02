@@ -113,7 +113,7 @@ var SampleApp = function() {
     });
 
     self.app.get('/populate/', function(req, res) {
-      var today = moment().format('YYYY-MM-DD');
+      var today = moment().tz("Europe/Madrid").format('YYYY-MM-DD');
       console.log("Obteniendo datos de fecha: " + today);
 
       populateRequest(today, req, res);
@@ -173,8 +173,8 @@ var SampleApp = function() {
     });
 
     self.app.get('/data/last24h', function(req, res) {
-      var desde = moment().subtract(24, 'hours');
-      var hasta = moment();
+      var desde = moment().tz("Europe/Madrid").subtract(24, 'hours');
+      var hasta = moment().tz("Europe/Madrid");
 
       console.log("desde: " + desde.toDate());
       console.log("hasta: " + hasta.toDate());
