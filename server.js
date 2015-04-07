@@ -166,8 +166,9 @@ var SampleApp = function() {
       console.log("hasta: " + hasta.toDate());
 
       Energia
-        .where('ts').gte(desde.toDate()).lte(hasta.toDate())
+        //.where('ts').gte(desde.toDate()).lte(hasta.toDate())
         .sort({ ts: 'desc' })
+        .limit(144)
         .exec(function(err, data) {
           res.json(data);
         });
