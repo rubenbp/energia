@@ -84,7 +84,6 @@ var SampleApp = function() {
     });
   }
 
-
   /**
    *  Initialize the server (express) and create the routes and register
    *  the handlers.
@@ -93,6 +92,8 @@ var SampleApp = function() {
     self.app = express();
 
     self.app.use(cors());
+
+    self.app.use(express.static('public'));
 
     self.app.get('/populate/:date', function(req, res) {
       populateRequest(req.params.date, req, res);
