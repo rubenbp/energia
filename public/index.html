@@ -1,18 +1,16 @@
 ﻿<html>
 
 <head>
-    <title>D3 Energía</title>
+    <title>Visualización Energía Consumida España</title>
     <link rel="stylesheet" href="css/energia-font.css">
     <link rel="stylesheet" href="css/d3.css">
 </head>
 
 <body>
-    
     <div class="container">
-
-        <!--<input type="button" class='testbtn' value="REFRESH" id="updateBtn"> -->  
-      
+        <!--<input type="button" class='testbtn' value="REFRESH" id="updateBtn"> -->
         <h2>Composición generación eléctrica España</h2>
+        
         <p class='j-log'></p>
         <section id="chart">
         </section>
@@ -23,22 +21,20 @@
                     <dt class="energia__subtitulo">Aportación actual</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-eol">
-                            17.6%
                         </div>
                         <div class="energia__valor j-valor-eol">
-                            17.456MW
-                        </div>
+                            -- </div>
                     </dd>
                     <dt class="energia__subtitulo">Promedio en [N tiempo]</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-media-eol">
-                            17.6%
+                            --
                         </div>
                     </dd>
                     <dt class="energia__subtitulo">Generación CO2</dt>
                     <dd>
                         <div class="energia__valor j-co2-eol">
-                            1.500T/h
+                            --
                         </div>
                     </dd>
                 </dl>
@@ -49,22 +45,21 @@
                     <dt class="energia__subtitulo">Aportación actual</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-hid">
-                            17.6%
+                            --
                         </div>
                         <div class="energia__valor j-valor-hid">
-                            17.456MW
-                        </div>
+                            -- </div>
                     </dd>
                     <dt class="energia__subtitulo">Promedio en [N tiempo]</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-media-hid">
-                            17.6%
+                            --
                         </div>
                     </dd>
                     <dt class="energia__subtitulo">Generación CO2</dt>
                     <dd>
                         <div class="energia__valor j-co2-hid">
-                            1.500T/h
+                            --
                         </div>
                     </dd>
                 </dl>
@@ -75,22 +70,21 @@
                     <dt class="energia__subtitulo">Aportación actual</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-sol" data-source="">
-                            17.6%
+                            --
                         </div>
                         <div class="energia__valor j-valor-sol">
-                            17.456MW
-                        </div>
+                            -- </div>
                     </dd>
                     <dt class="energia__subtitulo">Promedio en [N tiempo]</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-media-sol">
-                            17.6%
+                            --
                         </div>
                     </dd>
                     <dt class="energia__subtitulo">Generación CO2</dt>
                     <dd>
                         <div class="energia__valor j-co2-sol">
-                            1.500T/h
+                            --
                         </div>
                     </dd>
                 </dl>
@@ -101,22 +95,21 @@
                     <dt class="energia__subtitulo">Aportación actual</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-aut">
-                            17.6%
+                            --
                         </div>
                         <div class="energia__valor j-valor-aut">
-                            17.456MW
-                        </div>
+                            -- </div>
                     </dd>
                     <dt class="energia__subtitulo">Promedio en [N tiempo]</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-media-aut">
-                            17.6%
+                            --
                         </div>
                     </dd>
                     <dt class="energia__subtitulo">Generación CO2</dt>
                     <dd>
                         <div class="energia__valor j-co2-aut">
-                            1.500T/h
+                            --
                         </div>
                     </dd>
                 </dl>
@@ -127,22 +120,21 @@
                     <dt class="energia__subtitulo">Aportación actual</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-gf">
-                            17.6%
+                            --
                         </div>
                         <div class="energia__valor j-valor-gf">
-                            17.456MW
-                        </div>
+                            -- </div>
                     </dd>
                     <dt class="energia__subtitulo">Promedio en [N tiempo]</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-media-gf">
-                            17.6%
+                            --
                         </div>
                     </dd>
                     <dt class="energia__subtitulo">Generación CO2</dt>
                     <dd>
                         <div class="energia__valor j-co2-gf">
-                            1.500T/h
+                            --
                         </div>
                     </dd>
                 </dl>
@@ -153,78 +145,75 @@
                     <dt class="energia__subtitulo">Aportación actual</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-nuc">
-                            17.6%
+                            --
                         </div>
                         <div class="energia__valor j-valor-nuc">
-                            17.456MW
-                        </div>
+                            -- </div>
                     </dd>
                     <dt class="energia__subtitulo">Promedio en [N tiempo]</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-media-nuc">
-                            17.6%
+                            --
                         </div>
                     </dd>
                     <dt class="energia__subtitulo">Generación CO2</dt>
                     <dd>
                         <div class="energia__valor j-co2-nuc">
-                            1.500T/h
+                            --
                         </div>
                     </dd>
                 </dl>
-            </div> 
+            </div>
             <div id="id_car" class="energia">
                 <div class="energia__titulo">Generador</div>
                 <dl>
                     <dt class="energia__subtitulo">Aportación actual</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-car">
-                            17.6%
+                            --
                         </div>
                         <div class="energia__valor j-valor-car">
-                            17.456MW
-                        </div>
+                            -- </div>
                     </dd>
                     <dt class="energia__subtitulo">Promedio en [N tiempo]</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-media-car">
-                            17.6%
+                            --
                         </div>
                     </dd>
                     <dt class="energia__subtitulo">Generación CO2</dt>
                     <dd>
                         <div class="energia__valor j-co2-car">
-                            1.500T/h
+                            --
                         </div>
                     </dd>
                 </dl>
-            </div> 
+            </div>
             <div id="id_cc" class="energia">
                 <div class="energia__titulo">Generador</div>
                 <dl>
                     <dt class="energia__subtitulo">Aportación actual</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-cc">
-                            17.6%
+                            --
                         </div>
                         <div class="energia__valor j-valor-cc">
-                            17.456MW
-                        </div>
+                            -- </div>
                     </dd>
                     <dt class="energia__subtitulo">Promedio en [N tiempo]</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-media-cc">
-                            17.6%
+                            --
                         </div>
                     </dd>
                     <dt class="energia__subtitulo">Generación CO2</dt>
                     <dd>
                         <div class="energia__valor j-co2-cc">
-                            1.500T/h
+                            --
                         </div>
                     </dd>
                 </dl>
-            </div> 
+            </div>
         </section>
     </div>
     <script src="js/d3.v3.min.js"></script>
