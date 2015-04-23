@@ -871,10 +871,10 @@ var svg = d3.select("#chart").append('svg')
                     .text(datos.nombre) //.text(that.datum().nombre)
                     .style('color', datos.color);
                 that.selectAll('.energia__subtitulo')
-                    .data(['Aportación actual', 'Promedio 24h', 'Emisiones Co2'])
+                    .data(['Aportación actual', 'Promedio 24h', 'Emisiones CO<sub>2</sub>'])
                     .each(function(d) {
                         d3.select(this)
-                            .text(function() {
+                            .html(function() {
                                 return d;
                             })
                     });

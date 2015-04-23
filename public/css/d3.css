@@ -43,11 +43,16 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: .4em;
 }
  
-
+sub {
+  font-size: .83em;
+  bottom: -0.25em;
+  position: relative;
+  vertical-align: baseline;
+}
 
 
 .container {
-    max-width: 1200px;
+    max-width: 1100px;
     width: 100%;
     margin: 0 auto;
     background: #2f2f2f;
