@@ -28,9 +28,12 @@ body {
   line-height: 1em;
   background: #272727;
   color: #475B62;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
 }
 * {
   box-sizing: border-box;
+
 }
 strong {
   font-weight: 600;
