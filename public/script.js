@@ -638,7 +638,7 @@
         .range([10, 24]);
 
     var opacityScale = d3.scale.linear()
-        .range([.5, 1]);
+        .range([.4, 1]);
 
     var colorDemand = d3.scale.linear()
         .range(['#996A00', '#990000']);
