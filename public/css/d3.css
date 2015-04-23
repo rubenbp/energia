@@ -26,7 +26,7 @@ body {
   font-weight: 300;
   font-size: 1em;
   line-height: 1em;
-  background: #616264;
+  background: #272727;
   color: #475B62;
 }
 * {
@@ -50,9 +50,8 @@ sub {
   vertical-align: baseline;
 }
 
-
 .container {
-    max-width: 1100px;
+    max-width: 1024px;
     width: 100%;
     margin: 0 auto;
     background: #2f2f2f;
