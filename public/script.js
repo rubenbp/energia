@@ -963,18 +963,7 @@
                     .style('opacity', 1)
 
 
-            })
-
-            ;
-
-
-            //console.log ('calls', calls)
-
-            if (calls < 4) {
-                calls += 1
-            } else {
-                calls = 1
-            };
+            });
 
 
         })
