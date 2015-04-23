@@ -762,7 +762,7 @@
 
                     tooltip_mw
                         .text(function() {
-                            return ES.numberFormat(",.")(d.dem) + "Mwh";
+                            return ES.numberFormat(",.")(d.dem) + "MW";
                         });
 
                     tooltip_rect
@@ -770,7 +770,6 @@
                         .attr('fill', colorDemand(d.dem))
                         .attr('fill-opacity', 1);
 
-                    // console.log (this)
                 })
                 .each(function(d) {
                     //CREO LOS 'HUECOS'
@@ -784,7 +783,6 @@
 
                     .on('click', function() {
                             var that = d3.select(this);
-                            //console.log("click", iso.parse(d.ts), that.datum().nombre, d[that.datum().id])
                             console.log("click", iso.parse(d.ts), that.datum(), d[that.datum()])
                         })
                         .on('mouseover', function() {
@@ -801,7 +799,6 @@
                                     'stroke-opacity': .9
                                 })
 
-                            //console.log(c)
 
 
                             that.transition()
@@ -811,7 +808,6 @@
 
                             var that = d3.select(this);
                             d3.select(this).transition()
-                                //.attr('fill', '#' + d3.select(this).datum().color);
                                 .attr('fill', '#' + tablaIdsInfo[that.datum()].color);
                         })
                         .attr('fill', function(d, n) {
