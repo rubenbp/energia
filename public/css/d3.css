@@ -47,11 +47,9 @@ h1, h2, h3, h4, h5, h6 {
 
 
 .container {
-    margin-right: auto;
-    margin-left: auto;
-    width: 100%;
     max-width: 1200px;
-    margin: 20px auto;
+    width: 100%;
+    margin: 0 auto;
     background: #2f2f2f;
 }
 
@@ -68,12 +66,13 @@ section {
     border-color: #0f0;
 }
 
+
 svg {
     border-style: dashed;
     border-width: 1px;
     border-color: #00f;
-}*/
-
+}
+*/
 /*DEBUG
 
 
@@ -89,7 +88,6 @@ svg {
 */ 
 
 .title {
-
   padding: 10px 10px;  
 }
 
@@ -104,13 +102,14 @@ p {
 }
 
 #energias {
+  padding-top: 10px;
   overflow: hidden;
   background-color: #222;
 }
 
 .energia {
     position: relative;
-    padding: 85px 20px 20px;
+    padding: 85px 60px 20px;
     font-weight: 600;
     font-size: .9em;
     color: #7B8B8B;
