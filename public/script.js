@@ -118,7 +118,9 @@
             'nombre': 'Eólica',
             'color': '7EAADD',
             'highlightColor': 'c6d1dd',
-            'icon': '\\e82b'
+            'icon': '\\e82b',
+            'med24h':0,
+            'percent24h':0
         },
         'hid': {
             'id': 'hid',
@@ -170,6 +172,41 @@
         }
     };
 
+    var tablaIdsConsumos = {
+        'eol': {
+            'med24h':0,
+            'percent24h':0
+        },
+        'hid': {
+            'med24h':0,
+            'percent24h':0
+        },
+        'sol': {
+            'med24h':0,
+            'percent24h':0
+        },
+        'aut': {
+            'med24h':0,
+            'percent24h':0
+        },
+        'gf': {
+            'med24h':0,
+            'percent24h':0
+        },
+        'nuc': {
+            'med24h':0,
+            'percent24h':0
+        },
+        'car': {
+            'med24h':0,
+            'percent24h':0
+        },
+        'cc': {
+            'med24h':0,
+            'percent24h':0
+        }
+    };
+
     var tablaEmisiones = {
         "icb": 0,
         "inter": 0,
@@ -216,11 +253,11 @@
 
 
 
-var svg = d3.select("#chart").append('svg')
-    .attr('width', canvasWidth)
-    .attr('height', canvasHeight)
-    //.attr("viewBox", "0 0 "+ canvasWidth +" "+ canvasHeight)
-    //.attr("preserveAspectRatio", "xMinYMin meet");
+    var svg = d3.select("#chart").append('svg')
+        .attr('width', canvasWidth)
+        .attr('height', canvasHeight)
+        //.attr("viewBox", "0 0 "+ canvasWidth +" "+ canvasHeight)
+        //.attr("preserveAspectRatio", "xMinYMin meet");
 
     var defs = svg.append("defs");
 
@@ -565,7 +602,7 @@ var svg = d3.select("#chart").append('svg')
             halfWidth = canvasWidth / 2,
             halfHeight = canvasHeight / 2;
 
-            //console.log('offset', offset.left, offset.top )
+        //console.log('offset', offset.left, offset.top )
 
         var xsign = (x > halfWidth) ? 1 : 0,
             ysign = (y > halfHeight) ? 1 : 0;
@@ -615,7 +652,7 @@ var svg = d3.select("#chart").append('svg')
     function getData(path) {
 
         //console.log('get', path)
-            //d3.json("datos/demandaGeneracionPeninsula.24.3.2015.json", function(data) {
+        //d3.json("datos/demandaGeneracionPeninsula.24.3.2015.json", function(data) {
 
         d3.json(path, function(data) {
 
@@ -640,6 +677,25 @@ var svg = d3.select("#chart").append('svg')
 
 
             datosJson.reverse();
+
+
+            // GUARDO MEDIAS DE CADA CATEGORÍA
+            // tablaIdsOrdenados[id,id,...]
+            /*
+
+                tablaIdsConsumos = {
+                        'eol': {
+                            'med24h':0,
+                            'percent24h':0
+
+            
+            for (var i = 0; i<tablaIdsOrdenados.length;i++){
+                //d3.mean(datosJson, function(d) { return d[id];}))
+
+                tablaIdsConsumos[tablaIdsOrdenados[i]].med24h = d3.mean(datosJson, function(d) { return d[tablaIdsOrdenados[i]];}))
+                
+            }
+            */
 
             var maxDemand = d3.max(datosJson, demFn),
                 minDemand = d3.min(datosJson, demFn)
@@ -859,7 +915,6 @@ var svg = d3.select("#chart").append('svg')
             var energias = d3.select('#energias').selectAll(".energia")
                 .data(tablaIdsOrdenados);
 
-            //console.log(energias,'energias')
 
             energias.each(function(d, i) {
 
@@ -889,16 +944,19 @@ var svg = d3.select("#chart").append('svg')
                     });
                 that.select('.j-porcentaje-media-' + id)
                     .text(function() {
-                        return '--';
+                        return "--";
+                    });
+                that.select('.j-aportacion-media-' + id)
+                    .text(function() {
+                        return ES.numberFormat(",.2f")(d3.mean(datosJson, function(d) { return d[id];
+                        })) +"MW";
                     });
                 that.select('.j-co2-' + id)
                     .text(function() {
                         return ES.numberFormat(",.2f")(+dLast[id] * tablaEmisiones[id]) + 'T/h';
                     });
 
-                //document.styleSheets[0].addRule( '#id_'+ id +':before','content: "'+datos.id+'"; color:'+datos.color+';');
                 document.styleSheets[0].addRule('#id_' + id + ':before', 'content: "' + datos.icon + '"; color:' + datos.color + ';');
-
 
                 that.style('opacity', .5)
                     .transition().delay(i * 100)
@@ -922,21 +980,6 @@ var svg = d3.select("#chart").append('svg')
         })
 
     }
-
-
-
-    // getData("datos/last24h." + calls + ".json");
-    var calls = 1;
-
-    /*d3.select('#updateBtn')
-        .on('click', function() {
-
-            getData("datos/last24h." + calls + ".json");
-
-        })*/
-
-    //getData("datos/last24h." + calls + ".json");
-    // setInterval( function () { getData( "datos/last24h." + calls + ".json" ); }, 10000);
 
     setInterval(getData, 1000 * 30, "https://energia-ngpt.rhcloud.com/data/last24h");
     getData("https://energia-ngpt.rhcloud.com/data/last24h");

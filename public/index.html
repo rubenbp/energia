@@ -1,21 +1,29 @@
 ﻿<html>
 
 <head>
-    <title>Visualización Energía Consumida España - dev alpha </title>
+    <title>Visualización 24 últimas horas Energía Consumida España - dev alpha </title>
     <link rel="stylesheet" href="css/energia-font.css">
     <link rel="stylesheet" href="css/d3.css">
+    <!-- For IE 9 and below. ICO should be 32x32 pixels in size -->
+    <!--[if IE]><link rel="shortcut icon" href="imgs/fav/favicon.ico"><![endif]-->
+
+    <!-- Touch Icons - iOS and Android 2.1+ 180x180 pixels in size. --> 
+    <link rel="apple-touch-icon-precomposed" href="imgs/fav/apple-touch-icon-precomposed.png">
+
+    <!-- Firefox, Chrome, Safari, IE 11+ and Opera. 196x196 pixels in size. -->
+    <link rel="icon" href="imgs/fav/favicon.png">
+
 </head>
 
 <body>
     <div class="container">
         <!--<input type="button" class='testbtn' value="REFRESH" id="updateBtn"> -->
-        <h2 class='title'>Composición generación eléctrica España</h2>
-        
+        <h2 class='visualizacion__title'>Generación Eléctrica España - Últimas 24 horas</h2>
+        <h3 class='visualizacion__subtitle'>Potencia por fuente de generación</h3>
         <!--<p class='j-log'></p>-->
-        
         <section id="chart" class='chart'></section>
-
         <section id="energias">
+            <h3 class='visualizacion__subtitle'>Últimas lécturas</h3>
             <div id="id_eol" class="energia">
                 <div class="energia__titulo">Generador</div>
                 <dl>
@@ -32,6 +40,7 @@
                         <div class="energia__valor energia__valor--destacado j-porcentaje-media-eol">
                             --
                         </div>
+                        <div class="energia__valor j-aportacion-media-eol">*</div>
                     </dd>
                     <dt class="energia__subtitulo">Generación CO2</dt>
                     <dd>
@@ -57,6 +66,7 @@
                         <div class="energia__valor energia__valor--destacado j-porcentaje-media-hid">
                             --
                         </div>
+                        <div class="energia__valor j-aportacion-media-hid">*</div>
                     </dd>
                     <dt class="energia__subtitulo">Generación CO2</dt>
                     <dd>
@@ -82,6 +92,7 @@
                         <div class="energia__valor energia__valor--destacado j-porcentaje-media-sol">
                             --
                         </div>
+                        <div class="energia__valor j-aportacion-media-sol">*</div>
                     </dd>
                     <dt class="energia__subtitulo">Generación CO2</dt>
                     <dd>
@@ -107,6 +118,7 @@
                         <div class="energia__valor energia__valor--destacado j-porcentaje-media-aut">
                             --
                         </div>
+                        <div class="energia__valor j-aportacion-media-aut">*</div>
                     </dd>
                     <dt class="energia__subtitulo">Generación CO2</dt>
                     <dd>
@@ -132,6 +144,7 @@
                         <div class="energia__valor energia__valor--destacado j-porcentaje-media-gf">
                             --
                         </div>
+                        <div class="energia__valor j-aportacion-media-gf">*</div>
                     </dd>
                     <dt class="energia__subtitulo">Generación CO2</dt>
                     <dd>
@@ -157,6 +170,7 @@
                         <div class="energia__valor energia__valor--destacado j-porcentaje-media-nuc">
                             --
                         </div>
+                        <div class="energia__valor j-aportacion-media-nuc">*</div>
                     </dd>
                     <dt class="energia__subtitulo">Generación CO2</dt>
                     <dd>
@@ -182,6 +196,7 @@
                         <div class="energia__valor energia__valor--destacado j-porcentaje-media-car">
                             --
                         </div>
+                        <div class="energia__valor j-aportacion-media-car">*</div>
                     </dd>
                     <dt class="energia__subtitulo">Generación CO2</dt>
                     <dd>
@@ -207,6 +222,7 @@
                         <div class="energia__valor energia__valor--destacado j-porcentaje-media-cc">
                             --
                         </div>
+                        <div class="energia__valor j-aportacion-media-cc">*</div>
                     </dd>
                     <dt class="energia__subtitulo">Generación CO2</dt>
                     <dd>
@@ -217,12 +233,11 @@
                 </dl>
             </div>
         </section>
-
     </div>
     <footer></footer>
     <script src="js/d3.v3.min.js"></script>
-
-   <script src="script.js"></script><!-- -->
+    <script src="script.js"></script>
+    <!-- -->
 </body>
 
 </html>

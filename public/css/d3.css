@@ -39,10 +39,18 @@ strong {
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   color: #ededed;
-  font-size: 1.75em;
+  /*  font-size: 1.75em;*/
   margin-bottom: .4em;
 }
- 
+
+h2 {
+  font-size: 1.65em
+} 
+
+h3 {
+  font-size: 1.25em
+}
+
 sub {
   font-size: .83em;
   bottom: -0.25em;
@@ -91,9 +99,7 @@ svg {
 }
 */ 
 
-.title {
-  padding: 10px 10px;  
-}
+
 
 #chart {
   text-align: center;
@@ -109,6 +115,17 @@ p {
   padding-top: 10px;
   overflow: hidden;
   background-color: #222;
+}
+.title {
+  padding: 15px 15px 0 0 ;  
+}
+.visualizacion__title {
+  padding: 15px 15px 0 15px;
+  color: #ededed;
+}
+.visualizacion__subtitle {
+  padding: 0 0 0 15px;
+  color:#BCD5D5;
 }
 
 .energia {
