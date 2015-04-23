@@ -15,8 +15,8 @@
         consumoMinimo,
         consumoMedio;
 
-    var canvasWidth = 1200,
-        canvasHeight = 700;
+    var canvasWidth = 768,
+        canvasHeight = 600;
 
     var centerX = canvasWidth / 2;
     var centerY = canvasHeight / 2;
@@ -212,35 +212,24 @@
     };
 
 
-
     //DIBUJO BASE 
 
 
 
-    var svg = d3.select("#chart").append('svg')
-        .attr('width', canvasWidth)
-        .attr('height', canvasHeight);
-
+var svg = d3.select("#chart").append('svg')
+    .attr('width', canvasWidth)
+    .attr('height', canvasHeight)
+    //.attr("viewBox", "0 0 "+ canvasWidth +" "+ canvasHeight)
+    //.attr("preserveAspectRatio", "xMinYMin meet");
 
     var defs = svg.append("defs");
 
     svg.append("symbol")
         .attr("id", "symbol_rayito")
-        .attr('viewBox','0 0 6.88 10.13' )
+        .attr('viewBox', '0 0 6.88 10.13')
         .append('path')
         .attr("d", "M2.669,6.257 L6.882,0.727 L5.122,0 L0,7.622 L3.843,6.96 L1.723,10.131 L2.26,10.133 L6.533,5.355 L2.669,6.257 z")
         .attr('fill', '#fff');
-
-
-    /*<svg width="500" height="100">
-        <symbol id="shape2">
-            <circle cx="25" cy="25" r="25" />
-        </symbol>
-
-        <use xlink:href="#shape2" x="50" y="25" />
-    </svg>*/
-
-
 
     svg.append('rect')
         .attr('id', 'bg')
@@ -262,8 +251,7 @@
         .attr('fill', '#222222');
 
 
-
-
+    // CREO LOS HOST PARA LOS 'RADIOS'
 
     svg.append('g').attr('id', 'horas');
 
@@ -349,24 +337,24 @@
     }
 
 
-
     //PINTO EL TOOLTIP
     var tooltipWidth = 120,
-        tooltipHeight = 27,
+        tooltipHeight = 28,
         currentTooltipFormat;
 
-    var tooltip = svg.append('g').attr('id', 'dem-tooltip').attr('opacity',0);
+    var tooltip = svg.append('g').attr('id', 'dem-tooltip').attr('opacity', 0);
 
     var tooltip_shadow = tooltip.append('rect')
         .attr({
-            'width': tooltipWidth +4,
-            'height': tooltipHeight +4,
+            'width': tooltipWidth + 4,
+            'height': tooltipHeight + 4,
             'fill': 'black',
             'fill-opacity': .15
         })
 
     var tooltip_rect = tooltip.append('rect')
         .attr({
+
             'width': tooltipWidth,
             'height': tooltipHeight
         })
@@ -405,11 +393,151 @@
         .attr('height',10.1 )
         .attr('xlink:href', '#symbol_rayito')
         .attr('fill', 'white')
-*/
+    */
 
     var outRadio = 0;
 
+    function setTooltip(name) {
 
+
+        if (name == 'fmt_0_0') {
+
+            tooltip_shadow.attr({
+                'x': -(tooltipWidth + 2),
+                'y': -(tooltipHeight + 2)
+            });
+
+            tooltip_rect
+                .attr({
+                    'x': -tooltipWidth,
+                    'y': -tooltipHeight
+
+                });
+
+            tooltip_fecha
+                .attr({
+                    'x': -4,
+                    'y': -16,
+                    'text-anchor': 'end'
+                });
+
+            tooltip_mw
+                .attr({
+                    'x': -4,
+                    'y': -4,
+                    'text-anchor': 'end'
+                });
+
+            /*                tooltip_arrow
+                                .attr({
+                                    'x': 0,
+                                    'y': 0
+                                });*/
+
+        }
+
+        if (name == 'fmt_1_0') {
+
+            tooltip_shadow.attr({
+
+                'x': -2,
+                'y': -(tooltipHeight + 2)
+            });
+
+            tooltip_rect
+                .attr({
+                    'x': 0,
+                    'y': -tooltipHeight
+                });
+
+            tooltip_fecha
+                .attr({
+                    'x': 5,
+                    'y': -16,
+                    'text-anchor': 'start'
+                });
+
+            tooltip_mw
+                .attr({
+                    'x': 5,
+                    'y': -4,
+                    'text-anchor': 'start'
+                });
+
+            /*                tooltip_arrow
+                                .attr({
+                                    'x': 0,
+                                    'y': 0
+                                });*/
+        }
+        if (name == 'fmt_1_1') {
+            tooltip_shadow.attr({
+
+                'x': -2,
+                'y': -2
+            });
+
+            tooltip_rect
+                .attr({
+                    'x': 0,
+                    'y': 0
+                });
+
+            tooltip_fecha
+                .attr({
+                    'x': 5,
+                    'y': 11,
+                    'text-anchor': 'start'
+                });
+
+            tooltip_mw
+                .attr({
+                    'x': 5,
+                    'y': 24,
+                    'text-anchor': 'start'
+                });
+
+            /*                tooltip_arrow
+                                .attr({
+                                    'x': 0,
+                                    'y': 0
+                                });*/
+        }
+        if (name == 'fmt_0_1') {
+            tooltip_shadow.attr({
+                'x': -(tooltipWidth + 2),
+                'y': -2
+            });
+
+            tooltip_rect
+                .attr({
+                    'x': -tooltipWidth,
+                    'y': 0
+                });
+
+            tooltip_fecha
+                .attr({
+                    'x': -4,
+                    'y': 11,
+                    'text-anchor': 'end'
+                });
+
+            tooltip_mw
+                .attr({
+                    'x': -4,
+                    'y': 24,
+                    'text-anchor': 'end'
+                });
+
+            /*                tooltip_arrow
+                                .attr({
+                                    'x': 0,
+                                    'y': 0
+                                });*/
+        }
+
+
+    }
 
     function mousemove(d, i) {
 
@@ -441,178 +569,16 @@
         var xsign = (x > halfWidth) ? 1 : 0,
             ysign = (y > halfHeight) ? 1 : 0;
 
-        var tooltipFormats = {
-
-            'fmt_0_0': {
-
-                'stroke': 'red'
-
-            },
-            'fmt_1_0': {
-                'stroke': 'green'
-
-            },
-            'fmt_1_1': {
-                'stroke': 'blue'
-
-            },
-            'fmt_0_1': {
-
-                'stroke': 'black'
-            }
-        }
-
-        function setTooltip(name) {
 
 
-            if (name == 'fmt_0_0') {
-
-                tooltip_shadow.attr({
-                    'x': -(tooltipWidth +2),
-                    'y': -(tooltipHeight +2)
-                });
-
-                tooltip_rect
-                    .attr({
-                        'x': -tooltipWidth,
-                        'y': -tooltipHeight
-
-                    });
-
-                tooltip_fecha
-                    .attr({
-                        'x': -4,
-                        'y': -16,
-                        'text-anchor': 'end'
-                    });
-
-                tooltip_mw
-                    .attr({
-                        'x': -4,
-                        'y': -4,
-                        'text-anchor': 'end'
-                    });
-
-/*                tooltip_arrow
-                    .attr({
-                        'x': 0,
-                        'y': 0
-                    });*/
-
-            }
-
-            if (name == 'fmt_1_0') {
-
-                tooltip_shadow.attr({
-
-                    'x': -2,
-                    'y': -(tooltipHeight +2)
-                });
-
-                tooltip_rect
-                    .attr({
-                        'x': 0,
-                        'y': -tooltipHeight
-                    });
-
-                tooltip_fecha
-                    .attr({
-                        'x': 5,
-                        'y': -16,
-                        'text-anchor': 'start'
-                    });
-
-                tooltip_mw
-                    .attr({
-                        'x': 5,
-                        'y': -4,
-                        'text-anchor': 'start'
-                    });
-
-/*                tooltip_arrow
-                    .attr({
-                        'x': 0,
-                        'y': 0
-                    });*/
-            }
-            if (name == 'fmt_1_1') {
-                tooltip_shadow.attr({
-
-                    'x': -2,
-                    'y': -2
-                });
-
-                tooltip_rect
-                    .attr({
-                        'x': 0,
-                        'y': 0
-                    });
-
-                tooltip_fecha
-                    .attr({
-                        'x': 5,
-                        'y': 11,
-                        'text-anchor': 'start'
-                    });
-
-                tooltip_mw
-                    .attr({
-                        'x': 5,
-                        'y': 24,
-                        'text-anchor': 'start'
-                    });
-
-/*                tooltip_arrow
-                    .attr({
-                        'x': 0,
-                        'y': 0
-                    });*/
-            }
-            if (name == 'fmt_0_1') {
-                tooltip_shadow.attr({
-                    'x': -(tooltipWidth +2),
-                    'y': -2
-                });
-
-                tooltip_rect
-                    .attr({
-                        'x': -tooltipWidth,
-                        'y': 0
-                    });
-
-                tooltip_fecha
-                    .attr({
-                        'x': -4,
-                        'y': 11,
-                        'text-anchor': 'end'
-                    });
-
-                tooltip_mw
-                    .attr({
-                        'x': -4,
-                        'y': 24,
-                        'text-anchor': 'end'
-                    });
-
-/*                tooltip_arrow
-                    .attr({
-                        'x': 0,
-                        'y': 0
-                    });*/
-            }
 
 
-        }
+        var tooltipFmtName = ['fmt_', xsign, '_', ysign].join("");
 
-
-        var tooltipFmtName = ['fmt_' , xsign , '_' , ysign].join("");
-
-        if (tooltipFmtName != currentTooltipFormat ){ 
+        if (tooltipFmtName != currentTooltipFormat) {
             setTooltip('fmt_' + xsign + '_' + ysign);
             currentTooltipFormat = tooltipFmtName;
         }
-
-        
 
 
         groupCircle.transition(100).style('opacity', outRadio);
@@ -651,7 +617,7 @@
 
     function getData(path) {
 
-        console.log('get', path)
+        //console.log('get', path)
             //d3.json("datos/demandaGeneracionPeninsula.24.3.2015.json", function(data) {
 
         d3.json(path, function(data) {

@@ -1,7 +1,7 @@
 ﻿<html>
 
 <head>
-    <title>Visualización Energía Consumida España</title>
+    <title>Visualización Energía Consumida España - dev alpha </title>
     <link rel="stylesheet" href="css/energia-font.css">
     <link rel="stylesheet" href="css/d3.css">
 </head>
@@ -9,11 +9,12 @@
 <body>
     <div class="container">
         <!--<input type="button" class='testbtn' value="REFRESH" id="updateBtn"> -->
-        <h2>Composición generación eléctrica España</h2>
+        <h2 class='title'>Composición generación eléctrica España</h2>
         
-        <p class='j-log'></p>
-        <section id="chart">
-        </section>
+        <!--<p class='j-log'></p>-->
+        
+        <section id="chart" class='chart'></section>
+
         <section id="energias">
             <div id="id_eol" class="energia">
                 <div class="energia__titulo">Generador</div>
@@ -21,6 +22,7 @@
                     <dt class="energia__subtitulo">Aportación actual</dt>
                     <dd>
                         <div class="energia__valor energia__valor--destacado j-porcentaje-eol">
+                            --
                         </div>
                         <div class="energia__valor j-valor-eol">
                             -- </div>
@@ -217,7 +219,8 @@
         </section>
     </div>
     <script src="js/d3.v3.min.js"></script>
-    <script src="script.js"></script>
+
+   <script src="script.js"></script><!-- -->
 </body>
 
 </html>
