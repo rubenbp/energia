@@ -557,20 +557,18 @@ var svg = d3.select("#chart").append('svg')
         } else {
             outRadio = 1;
         }
-        var p = document.getElementById('chart'),
-            offset = {
-                'left': p.offsetLeft,
-                'top': p.offsetTop
+
+        var offset = {
+                'left': svg.offsetLeft,
+                'top': svg.offsetTop
             },
             halfWidth = canvasWidth / 2,
             halfHeight = canvasHeight / 2;
 
+            //console.log('offset', offset.left, offset.top )
 
         var xsign = (x > halfWidth) ? 1 : 0,
             ysign = (y > halfHeight) ? 1 : 0;
-
-
-
 
 
         var tooltipFmtName = ['fmt_', xsign, '_', ysign].join("");
@@ -587,8 +585,7 @@ var svg = d3.select("#chart").append('svg')
 
     }
 
-    d3.select('#chart')
-        .on('mousemove', mousemove)
+    svg.on('mousemove', mousemove)
 
 
 
