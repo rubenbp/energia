@@ -119,8 +119,8 @@
             'color': '7EAADD',
             'highlightColor': 'c6d1dd',
             'icon': '\\e82b',
-            'med24h':0,
-            'percent24h':0
+            'med24h': 0,
+            'percent24h': 0
         },
         'hid': {
             'id': 'hid',
@@ -174,36 +174,36 @@
 
     var tablaIdsConsumos = {
         'eol': {
-            'med24h':0,
-            'percent24h':0
+            'med24h': 0,
+            'percent24h': 0
         },
         'hid': {
-            'med24h':0,
-            'percent24h':0
+            'med24h': 0,
+            'percent24h': 0
         },
         'sol': {
-            'med24h':0,
-            'percent24h':0
+            'med24h': 0,
+            'percent24h': 0
         },
         'aut': {
-            'med24h':0,
-            'percent24h':0
+            'med24h': 0,
+            'percent24h': 0
         },
         'gf': {
-            'med24h':0,
-            'percent24h':0
+            'med24h': 0,
+            'percent24h': 0
         },
         'nuc': {
-            'med24h':0,
-            'percent24h':0
+            'med24h': 0,
+            'percent24h': 0
         },
         'car': {
-            'med24h':0,
-            'percent24h':0
+            'med24h': 0,
+            'percent24h': 0
         },
         'cc': {
-            'med24h':0,
-            'percent24h':0
+            'med24h': 0,
+            'percent24h': 0
         }
     };
 
@@ -325,16 +325,15 @@
 
     var hoy = new Date();
     var currentHourRotation = horaRotation((60 * hoy.getHours()) + hoy.getMinutes());
-    //var currentHourRotation = horaRotation((60 * 15) + 10); // 13:25 horas
 
-    svg.append('circle')
+    var circleHour = svg.append('circle')
         .attr('id', 'circleHour')
         .attr('r', 3)
         .attr('cx', (centerX) + (radio + 12) * Math.sin(grados_a_radianes(180 + 360 - currentHourRotation)))
         .attr('cy', (centerY) + (radio + 12) * Math.cos(grados_a_radianes(180 + 360 - currentHourRotation)))
         .attr('stroke-width', '2')
-        .attr('stroke', '#666')
-        .attr('fill', '#666');
+        .attr('stroke', '#BCD5D5')
+        .attr('fill', '#BCD5D5');
 
     var clockTimer = setInterval(function() {
 
@@ -342,14 +341,13 @@
             currentHourRotation = horaRotation((60 * date.getHours()) + date.getMinutes()),
             calc = grados_a_radianes(180 + 360 - currentHourRotation);
 
-        //console.log('updated clock', date)
 
-        d3.select('#circleHour').transition()
+        circleHour.transition()
             .attr('cx', (centerX) + radioHours * Math.sin(calc))
             .attr('cy', (centerY) + radioHours * Math.cos(calc))
             .attr('r', function() {
-                var that = d3.select(this);
-                return ((that.attr('r') != 3) ? 3 : 1);
+                //var that = d3.select(this);
+                return ((circleHour.attr('r') != 3) ? 3 : 1);
             });
     }, 1000);
 
@@ -372,6 +370,12 @@
             .style('font-family', 'Roboto Slab, Helvetica Neue, Helvetica, sans-serif')
             .style('fill', '#666')
     }
+
+    // PINTO EL DESGLOSE
+
+    var desglose = svg.append('g')
+        .attr('id', 'desglose_grupo')
+        .attr('transform', 'translate(' + (centerX + radio + 70) + ',' + (centerY - (radio*.75)) + ')')
 
 
     //PINTO EL TOOLTIP
@@ -402,7 +406,6 @@
         .attr('fill', 'white')*/
 
 
-
     var tooltip_fecha = tooltip.append('text')
         .attr('id', 'fecha')
         .attr('x', 5)
@@ -422,17 +425,8 @@
         .style('font-family', 'Roboto Slab, Helvetica Neue, Helvetica, sans-serif')
         .style('fill', 'white');
 
-    /*var tooltip_arrow = tooltip.append('use')
-        .attr('id', 'arrow')
-        .attr('x',-3.4 - 5 )
-        .attr('y',-5 - 5)
-        .attr('width',6.8 )
-        .attr('height',10.1 )
-        .attr('xlink:href', '#symbol_rayito')
-        .attr('fill', 'white')
-    */
 
-    var outRadio = 0;
+    var isOuterRadio = 0;
 
     function setTooltip(name) {
 
@@ -465,11 +459,6 @@
                     'text-anchor': 'end'
                 });
 
-            /*                tooltip_arrow
-                                .attr({
-                                    'x': 0,
-                                    'y': 0
-                                });*/
 
         }
 
@@ -501,11 +490,6 @@
                     'text-anchor': 'start'
                 });
 
-            /*                tooltip_arrow
-                                .attr({
-                                    'x': 0,
-                                    'y': 0
-                                });*/
         }
         if (name == 'fmt_1_1') {
             tooltip_shadow.attr({
@@ -534,11 +518,6 @@
                     'text-anchor': 'start'
                 });
 
-            /*                tooltip_arrow
-                                .attr({
-                                    'x': 0,
-                                    'y': 0
-                                });*/
         }
         if (name == 'fmt_0_1') {
             tooltip_shadow.attr({
@@ -566,11 +545,6 @@
                     'text-anchor': 'end'
                 });
 
-            /*                tooltip_arrow
-                                .attr({
-                                    'x': 0,
-                                    'y': 0
-                                });*/
         }
 
 
@@ -590,9 +564,9 @@
         var sqrt = Math.sqrt(xs + ys)
 
         if (sqrt > radio) {
-            outRadio = 0;
+            isOuterRadio = 0;
         } else {
-            outRadio = 1;
+            isOuterRadio = 1;
         }
 
         var offset = {
@@ -616,14 +590,13 @@
         }
 
 
-        groupCircle.transition(100).style('opacity', outRadio);
-        groupConsumo.transition(100).style('opacity', outRadio);
-        tooltip.transition(100).style('opacity', outRadio);
+        groupCircle.transition(100).style('opacity', isOuterRadio);
+        groupConsumo.transition(100).style('opacity', isOuterRadio);
+        tooltip.transition(100).style('opacity', isOuterRadio);
 
     }
 
     svg.on('mousemove', mousemove)
-
 
 
     function demFn(d) {
@@ -649,12 +622,101 @@
     var scaleRadius = d3.scale.linear()
         .range([0, radio]);
 
+    var dispatch = d3.dispatch("start", "load", "statechange", "mouseenter");
+
+    dispatch.on("mouseenter", pintaDesglose)
+        //circleHour
+
+
+    function pintaDesglose(evt, datos) {
+
+        //function (a){ console.log("mmm mouseenter!", arguments)}
+
+        //console.log("mouseenter!", datos);
+
+        //var d = datos;
+        //tablaIdsOrdenados[]
+
+        // CALCULAMOS LA SUMA DE LAS DIFERENTES ENERGÍAS PROVEEDORAS
+        var generadoras = [datos.eol, datos.hid, datos.sol, datos.aut, datos.gf, datos.nuc, datos.car, datos.cc];
+        // CALCULAMOS LOS PORCENTAJES PARCIALES
+        var porcentajesDemanda = calcArrayPercents(generadoras);
+        //DEMANDA REAL, ES DECIR POR MEDIO GENERATIVO SUMANDO TODO (PROTOTIPO de ARRAY)
+        var demandaHora = generadoras.sum();
+        //console.log('demandaHora', demandaHora, porcentajesDemanda)
+
+        var acumuladoInner = 0,
+            grosorGeneradora = 0,
+            ln = porcentajesDemanda.length,
+            tsDate = iso.parse(datos.ts),
+            h = tsDate.getHours(),
+            m = tsDate.getMinutes(),
+            path;
+
+        var scaleDesglose = d3.scale.linear()
+            .range([0, (radio*.75) * 2]);
+
+        var tabla = [];
+
+        for (var i = 0; i < tablaIdsOrdenados.length; i++) {
+            tabla[i] = {
+                id: tablaIdsOrdenados[i],
+                datos: datos[tablaIdsOrdenados[i]]
+            };
+        }
+
+
+        var bloques = desglose.selectAll('rect')
+            .data(tabla, function(d, i) {
+                return d.id;
+            });
+
+            bloques.enter()
+                .append('rect')
+                .attr('id', function(d, i) {
+                    return "des_" + d.id;
+                })
+                .attr('x', 0)
+                .attr('y', 0)
+                .attr('width', 12)
+                .attr('height', 10)
+                .attr('fill', function(d) { 
+                    return '#' + tablaIdsInfo[d.id].color;
+                });
+
+        //UPDATE
+
+        bloques.each(function(d, i) {
+
+            grosorGeneradora = porcentajesDemanda[i] / 100 * ((radio*.75) * 2);
+            //console.log('each: ', d, i)
+            //console.log('\t',porcentajesDemanda[i])
+            //console.log('\tgrosorGeneradora', grosorGeneradora);
+
+            var that = d3.select(this)
+            .transition()
+                .attr('y', function() {
+                    return acumuladoInner;
+                })
+                .attr('height', function() {
+                    return grosorGeneradora;
+                })
+           
+            acumuladoInner += grosorGeneradora;
+        })
+
+
+
+    }
+
     function getData(path) {
 
         //console.log('get', path)
         //d3.json("datos/demandaGeneracionPeninsula.24.3.2015.json", function(data) {
 
-        d3.json(path, function(data) {
+        d3.json(path, function(error, data) {
+
+            if (error) throw error;
 
             // LIMPIO LOS DATOS DEL JSON NO UTILIZADOS
 
@@ -725,7 +787,9 @@
                     return d.ts;
                 });
 
+
             // ENTER
+
 
             rads.enter().append('g')
                 .attr('class', 'rad')
@@ -734,6 +798,9 @@
                     return 'id-' + ts.getHours() + ':' + ts.getMinutes() + '-dia-' + (ts.getDate());
                 })
                 .on('mouseenter', function(d) {
+
+                    dispatch.mouseenter(this, d);
+
                     var tsDate = iso.parse(d.ts),
                         h = tsDate.getHours(),
                         m = tsDate.getMinutes(),
@@ -772,10 +839,14 @@
 
                 })
                 .each(function(d) {
+
+
+
                     //CREO LOS 'HUECOS'
                     var group = d3.select(this),
                         ln = 8,
                         n = 0;
+
 
                     group.selectAll('path')
                         .data(tablaIdsOrdenados)
@@ -859,14 +930,16 @@
                     grosorGeneradora = porcentajesDemanda[n] / 100 * scaleRadius(d.dem);
 
                     d3.select(this).attr('d', arc.startAngle(function() {
-                        return grados_a_radianes(angle);
-                    }).endAngle(function() {
-                        return grados_a_radianes(angle + arcoPorcion);
-                    }).outerRadius(function() {
-                        return grosorGeneradora + acumuladoInner;
-                    }).innerRadius(function() {
-                        return acumuladoInner;
-                    }))
+                            return grados_a_radianes(angle);
+                        }).endAngle(function() {
+                            return grados_a_radianes(angle + arcoPorcion);
+                        }).outerRadius(function() {
+                            return grosorGeneradora + acumuladoInner;
+                        }).innerRadius(function() {
+                            return acumuladoInner;
+                        }))
+                        //.attr('shape-rendering','optimizeSpeed' )
+
                     acumuladoInner += grosorGeneradora;
 
                     n++;
@@ -903,6 +976,10 @@
             var porcentajesDemanda = calcArrayPercents(generadoras);
             //DEMANDA REAL, ES DECIR POR MEDIO GENERATIVO SUMANDO TODO (PROTOTIPO de ARRAY)
             var demandaHora = generadoras.sum();
+
+
+
+
 
 
             //ACTUALIZO HTML
@@ -944,8 +1021,9 @@
                     });
                 that.select('.j-aportacion-media-' + id)
                     .text(function() {
-                        return ES.numberFormat(",.2f")(d3.mean(datosJson, function(d) { return d[id];
-                        })) +"MW";
+                        return ES.numberFormat(",.2f")(d3.mean(datosJson, function(d) {
+                            return d[id];
+                        })) + "MW";
                     });
                 that.select('.j-co2-' + id)
                     .text(function() {
@@ -965,6 +1043,9 @@
         })
 
     }
+
+
+
 
     setInterval(getData, 1000 * 30, "https://energia-ngpt.rhcloud.com/data/last24h");
     getData("https://energia-ngpt.rhcloud.com/data/last24h");
