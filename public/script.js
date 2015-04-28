@@ -676,8 +676,6 @@
                 .attr('id', function(d, i) {
                     return "des_" + d.id;
                 })
-                .attr('x', 0)
-                .attr('y', 0)
                 .attr('width', 12)
                 .attr('height', 10)
                 .attr('fill', function(d) { 

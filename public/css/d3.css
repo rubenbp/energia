@@ -179,3 +179,33 @@ p {
     font-size: 1.5em;
     margin: 30px 10px;
 }
+
+footer {
+  min-height: 50px;
+}
+/* unvisited link */
+a:link {
+    color: #2CE9FF;
+}
+
+/* visited link */
+a:visited {
+    color: #9A7BFF;
+}
+
+/* mouse over link */
+a:hover {
+    color: #CFFAFF;
+}
+
+/* selected link */
+a:active {
+    color: #DF00FF;
+}
+
+
+.credits {
+  padding: 15px;
+  text-align: center;
+}
+
