@@ -1,10 +1,7 @@
+// Código prototipo preliminar no refactorizado
+// Prototype code not refactorized
+
 (function() {
-
-    vis = {}
-    vis.init = function() {
-
-
-    }
 
     var VEL_INTERFAZ = 600,
         radio = 250,
@@ -401,11 +398,6 @@
         })
 
 
-    /*var tooltip_arrow = tooltip.append('path')
-        .attr('d', 'M7.532,20.852 L11.744,15.321 L9.984,14.594 L4.863,22.217 L8.706,21.554 L6.586,24.725 L7.123,24.727 L11.395,19.949 L7.532,20.852 z')
-        .attr('fill', 'white')*/
-
-
     var tooltip_fecha = tooltip.append('text')
         .attr('id', 'fecha')
         .attr('x', 5)
@@ -630,20 +622,12 @@
 
     function pintaDesglose(evt, datos) {
 
-        //function (a){ console.log("mmm mouseenter!", arguments)}
-
-        //console.log("mouseenter!", datos);
-
-        //var d = datos;
-        //tablaIdsOrdenados[]
-
         // CALCULAMOS LA SUMA DE LAS DIFERENTES ENERGÍAS PROVEEDORAS
         var generadoras = [datos.eol, datos.hid, datos.sol, datos.aut, datos.gf, datos.nuc, datos.car, datos.cc];
         // CALCULAMOS LOS PORCENTAJES PARCIALES
         var porcentajesDemanda = calcArrayPercents(generadoras);
         //DEMANDA REAL, ES DECIR POR MEDIO GENERATIVO SUMANDO TODO (PROTOTIPO de ARRAY)
         var demandaHora = generadoras.sum();
-        //console.log('demandaHora', demandaHora, porcentajesDemanda)
 
         var acumuladoInner = 0,
             grosorGeneradora = 0,
