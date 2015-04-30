@@ -12,10 +12,10 @@
         consumoMinimo,
         consumoMedio;
 
-    var canvasWidth = 768,
+    var canvasWidth = 1024,
         canvasHeight = 600;
 
-    var centerX = canvasWidth / 2;
+    var centerX = canvasWidth * .45 //canvasWidth / 2;
     var centerY = canvasHeight / 2;
 
 
@@ -112,6 +112,7 @@
         'eol': {
             'id': 'eol',
             'nombre': 'Eólica',
+            'nombreAbrev': 'Eólica',
             'color': '7EAADD',
             'highlightColor': 'c6d1dd',
             'icon': '\\e82b',
@@ -121,6 +122,7 @@
         'hid': {
             'id': 'hid',
             'nombre': 'Hidraúlica',
+            'nombreAbrev': 'Hidraúlica',
             'color': '33537A',
             'highlightColor': '446fa4',
             'icon': '\\e82d'
@@ -128,6 +130,7 @@
         'sol': {
             'id': 'sol',
             'nombre': 'Solar/Solar Térmica',
+            'nombreAbrev': 'Solar/S.Térmica',
             'color': 'F5A623',
             'highlightColor': 'f5cc89',
             'icon': '\\e82c'
@@ -135,6 +138,7 @@
         'aut': {
             'id': 'aut',
             'nombre': 'Régimen Especial',
+            'nombreAbrev': 'R. Especial',
             'color': '9B9B9B',
             'highlightColor': 'bdbdbd',
             'icon': '\\e800'
@@ -142,13 +146,15 @@
         'gf': {
             'id': 'gf',
             'nombre': 'Gas + Fuel',
-            'color': '55361A',
-            'highlightColor': 'd18540',
+            'nombreAbrev': 'Gas+Fuel',
+            'color': '6F93A4',
+            'highlightColor': '96C6DD',
             'icon': '\\e806'
         },
         'nuc': {
             'id': 'nuc',
             'nombre': 'Nuclear',
+            'nombreAbrev': 'Nuclear',
             'color': 'BD10E0',
             'highlightColor': 'd712ff',
             'icon': '\\e807'
@@ -156,12 +162,15 @@
         'car': {
             'id': 'car',
             'nombre': 'Carbón',
-            'color': '453535',
+            'nombreAbrev': 'Carbón',
+            'color': '583636',
             'highlightColor': '795d5d',
             'icon': '\\e805'
         },
         'cc': {
+            'id': 'cc',
             'nombre': 'Ciclo Combinado',
+            'nombreAbrev': 'C. Combinado',
             'color': '3D4163',
             'highlightColor': '686fa9',
             'icon': '\\e804'
@@ -371,7 +380,7 @@
 
     var desglose = svg.append('g')
         .attr('id', 'desglose_grupo')
-        .attr('transform', 'translate(' + (centerX + radio + 70) + ',' + (centerY - (radio*.75)) + ')')
+        .attr('transform', 'translate(' + (centerX + radio + 70) + ',' + (centerY - (radio * .75)) + ')')
 
 
     //PINTO EL TOOLTIP
@@ -424,16 +433,16 @@
 
         if (name == 'fmt_0_0') {
 
-            tooltip_shadow.attr({
-                'x': -(tooltipWidth + 2),
-                'y': -(tooltipHeight + 2)
-            });
+            tooltip_shadow
+                .attr({
+                    'x': -(tooltipWidth + 2),
+                    'y': -(tooltipHeight + 2)
+                });
 
             tooltip_rect
                 .attr({
                     'x': -tooltipWidth,
                     'y': -tooltipHeight
-
                 });
 
             tooltip_fecha
@@ -455,11 +464,11 @@
 
         if (name == 'fmt_1_0') {
 
-            tooltip_shadow.attr({
-
-                'x': -2,
-                'y': -(tooltipHeight + 2)
-            });
+            tooltip_shadow
+                .attr({
+                    'x': -2,
+                    'y': -(tooltipHeight + 2)
+                });
 
             tooltip_rect
                 .attr({
@@ -483,11 +492,11 @@
 
         }
         if (name == 'fmt_1_1') {
-            tooltip_shadow.attr({
-
-                'x': -2,
-                'y': -2
-            });
+            tooltip_shadow
+                .attr({
+                    'x': -2,
+                    'y': -2
+                });
 
             tooltip_rect
                 .attr({
@@ -511,10 +520,11 @@
 
         }
         if (name == 'fmt_0_1') {
-            tooltip_shadow.attr({
-                'x': -(tooltipWidth + 2),
-                'y': -2
-            });
+            tooltip_shadow
+                .attr({
+                    'x': -(tooltipWidth + 2),
+                    'y': -2
+                });
 
             tooltip_rect
                 .attr({
@@ -569,8 +579,8 @@
 
         //console.log('offset', offset.left, offset.top )
 
-        var xsign = (x > halfWidth) ? 1 : 0,
-            ysign = (y > halfHeight) ? 1 : 0;
+        var xsign = (x > centerX) ? 1 : 0,
+            ysign = (y > centerY) ? 1 : 0;
 
 
         var tooltipFmtName = ['fmt_', xsign, '_', ysign].join("");
@@ -586,6 +596,7 @@
         tooltip.transition(100).style('opacity', isOuterRadio);
 
     }
+
 
     svg.on('mousemove', mousemove)
 
@@ -615,9 +626,36 @@
 
     var dispatch = d3.dispatch("start", "load", "statechange", "mouseenter");
 
-    dispatch.on("mouseenter", pintaDesglose)
-        //circleHour
+    //dispatch.on("mouseenter", pintaDesglose)
+    dispatch.on("mouseenter", debounce(pintaDesglose, 125))
 
+
+
+    //var myEfficientFn = debounce(function() {}, 250);
+
+    //window.addEventListener('resize', myEfficientFn);
+
+
+    //http://davidwalsh.name/javascript-debounce-function
+    // Returns a function, that, as long as it continues to be invoked, will not
+    // be triggered. The function will be called after it stops being called for
+    // N milliseconds. If `immediate` is passed, trigger the function on the
+    // leading edge, instead of the trailing.
+    function debounce(func, wait, immediate) {
+        var timeout;
+        return function() {
+            var context = this,
+                args = arguments;
+            var later = function() {
+                timeout = null;
+                if (!immediate) func.apply(context, args);
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+        };
+    };
 
 
     function pintaDesglose(evt, datos) {
@@ -638,7 +676,7 @@
             path;
 
         var scaleDesglose = d3.scale.linear()
-            .range([0, (radio*.75) * 2]);
+            .range([0, (radio * .75) * 2]);
 
         var tabla = [];
 
@@ -655,42 +693,113 @@
                 return d.id;
             });
 
-            bloques.enter()
-                .append('g')
-                .attr('id', function(d, i) {
-                    return "des_" + d.id;
-                })
-                .each(function (){
+        bloques.enter()
+            .append('g')
+            .attr('id', function(d, i) {
+                return "des_" + d.id;
+            })
+            .each(function() {
+                var that = d3.select(this);
 
-                    d3.select(this).append('rect')
-                    .attr('width', 12)
+                that.append('rect')
+                    .attr('width', 6)
                     .attr('height', 10)
-                    .attr('fill', function(d) { 
+                    .attr('fill', function(d) {
                         return '#' + tablaIdsInfo[d.id].color;
                     });
 
+                that.append('text')
+                    .text(function(d) {
+                        return tablaIdsInfo[d.id].id;
+                    })
+                    .attr('class', 'j-nombre')
+                    .attr('x', 30)
+                    .attr('y', 20)
+                    .attr('text-anchor', 'start')
+                    .style('font-size', '13')
+                    .style('font-family', 'Roboto Slab, Helvetica Neue, Helvetica, sans-serif')
+                    .style('fill', '#B3B3B3')
+                    .style('fill', function(d) {
+                        return '#' + tablaIdsInfo[d.id].highlightColor;
+                    })
+                    .attr('transform', 'rotate(-45)');
+
+                that.append('text')
+                    .text(function(d) {
+                        return tablaIdsInfo[d.id].id;
+                    })
+                    .attr('class', 'j-MW')
+                    .attr('x', 30)
+                    .attr('y', 32)
+                    .attr('text-anchor', 'start')
+                    .style('font-size', '12')
+                    .style('font-family', 'Roboto Slab, Helvetica Neue, Helvetica, sans-serif')
+                    .style('fill', '#B3B3B3')
+                    .style('fill', function(d) {
+                        return '#' + tablaIdsInfo[d.id].highlightColor;
+                    })/**/
+                    .attr('transform', 'rotate(-45)');
+
+                that.append('path')
+                    .style('fill', 'none')
+                    .style('stroke-width', '1')
+                    .style('stroke', function(d) {
+                        return '#' + tablaIdsInfo[d.id].color;
+                    })
 
 
-                })
-                
+            })
+
 
         //UPDATE
+        var safeStep = 31,
+            safeStepCalc = 0,
+            colisionCounter = 0,
+            minPercentStep = 8;
 
         bloques.each(function(d, i) {
 
-            grosorGeneradora = porcentajesDemanda[i] / 100 * ((radio*.75) * 2);
+
+
+            if (porcentajesDemanda[i - 1] < minPercentStep) {
+                colisionCounter++;
+            }
+
+
+            safeStepCalc = safeStep * colisionCounter;
+            grosorGeneradora = porcentajesDemanda[i] / 100 * ((radio * .75) * 2);
+
 
             var that = d3.select(this)
-            .transition()
-                
+                .transition()
                 .attr('transform', 'translate(0,' + acumuladoInner + ')')
-                .each( function (){
-                    d3.select(this).select('rect')
+                .each(function() {
+                    var that = d3.select(this);
+                    that.select('rect')
                         .transition()
-                        .attr('height', grosorGeneradora)
+                        .attr('height', grosorGeneradora);
+
+                    that.select('.j-nombre')
+                        .transition()
+                        .text(function(d) {
+                            return tablaIdsInfo[d.id].nombreAbrev + " " ;
+                        })
+                        .attr('transform', 'translate(' + safeStepCalc + ',' + 0 + ') ' + 'rotate(-45 0 0) ');
+
+                    that.select('.j-MW')
+                        .transition()
+                        .text(function(d) {
+                            return  ES.numberFormat(",.2f")(porcentajesDemanda[i]) + "% " + ES.numberFormat(",.")(d.datos) + "MW ";
+                        })
+                        .attr('transform', 'translate(' + safeStepCalc + ',' + 0 + ') ' + 'rotate(-45 0 0) ');
+
+                    that.select('path')
+                        .transition()
+                        .attr('d', 'M6,1 H' + Math.floor(31 + safeStepCalc) + " l3,-3")
+
                 })
 
-                
+
             acumuladoInner += grosorGeneradora;
         })
 
@@ -772,6 +881,10 @@
                 currentHourDateRotation = horaRotation((currentHourDate.getHours() * 60) + (currentHourDate.getMinutes())),
                 arcoPorcion = 360 / datosJson.length;
 
+            // LANZO EL ÚLTIMO DATO DISPONIBLE
+
+            dispatch.mouseenter(this, datosJson[datosJson.length-1]);
+
 
             // SELECCIONO LOS RADIOS QUE ALBERGAN CADA UNA DE LAS FRANJAS DE TIEMPO
 
@@ -790,6 +903,7 @@
                     return 'id-' + ts.getHours() + ':' + ts.getMinutes() + '-dia-' + (ts.getDate());
                 })
                 .on('mouseenter', function(d) {
+
 
                     dispatch.mouseenter(this, d);
 
