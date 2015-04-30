@@ -1132,7 +1132,11 @@
                         return ES.numberFormat(",.2f")(+dLast[id] * tablaEmisiones[id]) + 'T/h';
                     });
 
-                document.styleSheets[0].addRule('#id_' + id + ':before', 'content: "' + datos.icon + '"; color:' + datos.color + ';');
+                try {
+                    document.styleSheets[0].addRule('#id_' + id + ':before', 'content: "' + datos.icon + '"; color:' + datos.color + ';');
+                } catch(err) {
+                    console.log(err)
+                }
 
                 that.style('opacity', .5)
                     .transition().delay(i * 100)

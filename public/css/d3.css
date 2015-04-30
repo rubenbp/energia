@@ -183,6 +183,10 @@ p {
 footer {
   min-height: 50px;
 }
+
+a {
+  text-decoration: none;
+}
 /* unvisited link */
 a:link {
     color: #2CE9FF;
