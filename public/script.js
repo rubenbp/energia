@@ -1075,9 +1075,8 @@
 
             //console.log('datosJson', datosJson)
             var dLast = datosJson[datosJson.length - 1];
-
             // CALCULAMOS LA SUMA DE LAS DIFERENTES ENERGÍAS PROVEEDORAS
-            var generadoras = [dLast.eol, dLast.hid, dLast.aut, dLast.gf, dLast.nuc, dLast.car, dLast.cc];
+            var generadoras = [dLast.eol, dLast.hid, dLast.sol, dLast.aut, dLast.gf, dLast.nuc, dLast.car, dLast.cc];
             // CALCULAMOS LOS PORCENTAJES PARCIALES
             var porcentajesDemanda = calcArrayPercents(generadoras);
             //DEMANDA REAL, ES DECIR POR MEDIO GENERATIVO SUMANDO TODO (PROTOTIPO de ARRAY)
@@ -1096,7 +1095,8 @@
                 var datos = tablaIdsInfo[d];
 
                 var that = d3.select(this),
-                    id = d //that.datum()//.id
+                    id = d;
+
                 that.select('.energia__titulo')
                     .text(datos.nombre) //.text(that.datum().nombre)
                     .style('color', datos.color);
