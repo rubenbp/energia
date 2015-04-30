@@ -20,7 +20,6 @@
 
 
     function grados_a_radianes(grados) {
-
         return 2 * Math.PI / 360 * grados;
     }
 
@@ -620,6 +619,7 @@
         //circleHour
 
 
+
     function pintaDesglose(evt, datos) {
 
         // CALCULAMOS LA SUMA DE LAS DIFERENTES ENERGÍAS PROVEEDORAS
@@ -650,46 +650,57 @@
         }
 
 
-        var bloques = desglose.selectAll('rect')
+        var bloques = desglose.selectAll('g')
             .data(tabla, function(d, i) {
                 return d.id;
             });
 
             bloques.enter()
-                .append('rect')
+                .append('g')
                 .attr('id', function(d, i) {
                     return "des_" + d.id;
                 })
-                .attr('width', 12)
-                .attr('height', 10)
-                .attr('fill', function(d) { 
-                    return '#' + tablaIdsInfo[d.id].color;
-                });
+                .each(function (){
+
+                    d3.select(this).append('rect')
+                    .attr('width', 12)
+                    .attr('height', 10)
+                    .attr('fill', function(d) { 
+                        return '#' + tablaIdsInfo[d.id].color;
+                    });
+
+
+
+                })
+                
 
         //UPDATE
 
         bloques.each(function(d, i) {
 
             grosorGeneradora = porcentajesDemanda[i] / 100 * ((radio*.75) * 2);
-            //console.log('each: ', d, i)
-            //console.log('\t',porcentajesDemanda[i])
-            //console.log('\tgrosorGeneradora', grosorGeneradora);
 
             var that = d3.select(this)
             .transition()
-                .attr('y', function() {
-                    return acumuladoInner;
+                
+                .attr('transform', 'translate(0,' + acumuladoInner + ')')
+                .each( function (){
+                    d3.select(this).select('rect')
+                        .transition()
+                        .attr('height', grosorGeneradora)
                 })
-                .attr('height', function() {
-                    return grosorGeneradora;
-                })
-           
+
+                
             acumuladoInner += grosorGeneradora;
         })
 
 
 
     }
+
+
+
+
 
     function getData(path) {
 
@@ -771,7 +782,6 @@
 
 
             // ENTER
-
 
             rads.enter().append('g')
                 .attr('class', 'rad')
@@ -958,10 +968,6 @@
             var porcentajesDemanda = calcArrayPercents(generadoras);
             //DEMANDA REAL, ES DECIR POR MEDIO GENERATIVO SUMANDO TODO (PROTOTIPO de ARRAY)
             var demandaHora = generadoras.sum();
-
-
-
-
 
 
             //ACTUALIZO HTML
