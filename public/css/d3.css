@@ -42,7 +42,6 @@ strong {
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   color: #ededed;
-  /*  font-size: 1.75em;*/
   margin-bottom: .4em;
 }
 
@@ -59,6 +58,13 @@ sub {
   bottom: -0.25em;
   position: relative;
   vertical-align: baseline;
+}
+sup {
+  font-size: .4em;
+  bottom: .4em;
+  position: relative;
+  vertical-align: super;
+  color:#BCD5D5;
 }
 
 .container {
@@ -185,7 +191,7 @@ a:hover {
 
 /* selected link */
 a:active {
-    color: #DF00FF;
+    color: #FFF;
 }
 
 

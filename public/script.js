@@ -924,8 +924,8 @@
                         .attr('fill-opacity', 1);
 
                     tooltip
-                        .attr('transform', 'translate(' + (centerX + ((consumoRadio ) * sinA)) + ',' + (centerY + ((consumoRadio ) * cosA)) + ')')
-                   
+                        .attr('transform', 'translate(' + (centerX + ((consumoRadio) * sinA)) + ',' + (centerY + ((consumoRadio) * cosA)) + ')')
+
                     tooltip_fecha
                         .text(function() {
                             var tsDate = iso.parse(d.ts);
@@ -991,7 +991,7 @@
                             d3.select(this).transition()
                                 .attr('fill', '#' + tablaIdsInfo[that.datum()].color);
                         })
-                        .attr('fill', function(d, n) {
+                    .attr('fill', function(d, n) {
                             var that = d3.select(this)
                             return '#' + tablaIdsInfo[that.datum()].color;
                         })
