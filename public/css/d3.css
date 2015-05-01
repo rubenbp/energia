@@ -68,26 +68,7 @@ sub {
     background: #2f2f2f;
 }
 
-/*DEBUG
-div {
-    border-style: solid;
-    border-width: 1px;
-    border-color: #f00;
-}
 
-section {
-    border-style: dotted;
-    border-width: 1px;
-    border-color: #0f0;
-}
-
-
-svg {
-    border-style: dashed;
-    border-width: 1px;
-    border-color: #00f;
-}
-*/
 /*DEBUG
 
 

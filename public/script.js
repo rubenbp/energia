@@ -12,10 +12,10 @@
         consumoMinimo,
         consumoMedio;
 
-    var canvasWidth = 1024,
+    var canvasWidth = 960,
         canvasHeight = 600;
 
-    var centerX = canvasWidth * .45 //canvasWidth / 2;
+    var centerX = canvasWidth * .4 //canvasWidth / 2;
     var centerY = canvasHeight / 2;
 
 
@@ -34,14 +34,18 @@
     }
 
     //SUMA LOS ELEMENTOS DEL ARRAY
-    Array.prototype.sum = function() {
+    Array.prototype.sum = function(sumaPositivos) {
         var sum = 0,
             ln = this.length,
             i;
 
         for (i = 0; i < ln; i++) {
             if (typeof(this[i]) === 'number') {
+
+                //if (sumaPositivos && this[i] > 0){}
                 sum += this[i];
+
+
             }
         }
 
@@ -574,12 +578,7 @@
                 'left': svg.offsetLeft,
                 'top': svg.offsetTop
             },
-            halfWidth = canvasWidth / 2,
-            halfHeight = canvasHeight / 2;
-
-        //console.log('offset', offset.left, offset.top )
-
-        var xsign = (x > centerX) ? 1 : 0,
+            xsign = (x > centerX) ? 1 : 0,
             ysign = (y > centerY) ? 1 : 0;
 
 
@@ -641,6 +640,7 @@
     // be triggered. The function will be called after it stops being called for
     // N milliseconds. If `immediate` is passed, trigger the function on the
     // leading edge, instead of the trailing.
+
     function debounce(func, wait, immediate) {
         var timeout;
         return function() {
@@ -737,7 +737,7 @@
                     .style('fill', '#B3B3B3')
                     .style('fill', function(d) {
                         return '#' + tablaIdsInfo[d.id].highlightColor;
-                    })/**/
+                    }) /**/
                     .attr('transform', 'rotate(-45)');
 
                 that.append('path')
@@ -752,7 +752,7 @@
 
 
         //UPDATE
-        var safeStep = 31,
+        var safeStep = 32,
             safeStepCalc = 0,
             colisionCounter = 0,
             minPercentStep = 8;
@@ -782,14 +782,14 @@
                     that.select('.j-nombre')
                         .transition()
                         .text(function(d) {
-                            return tablaIdsInfo[d.id].nombreAbrev + " " ;
+                            return tablaIdsInfo[d.id].nombreAbrev + " ";
                         })
                         .attr('transform', 'translate(' + safeStepCalc + ',' + 0 + ') ' + 'rotate(-45 0 0) ');
 
                     that.select('.j-MW')
                         .transition()
                         .text(function(d) {
-                            return  ES.numberFormat(",.2f")(porcentajesDemanda[i]) + "% " + ES.numberFormat(",.")(d.datos) + "MW ";
+                            return ES.numberFormat(",.2f")(porcentajesDemanda[i]) + "% " + ES.numberFormat(",.")(d.datos) + "MW ";
                         })
                         .attr('transform', 'translate(' + safeStepCalc + ',' + 0 + ') ' + 'rotate(-45 0 0) ');
 
@@ -883,8 +883,7 @@
 
             // LANZO EL ÚLTIMO DATO DISPONIBLE
 
-            dispatch.mouseenter(this, datosJson[datosJson.length-1]);
-
+            dispatch.mouseenter(this, datosJson[datosJson.length - 1]);
 
             // SELECCIONO LOS RADIOS QUE ALBERGAN CADA UNA DE LAS FRANJAS DE TIEMPO
 
@@ -925,10 +924,10 @@
                         .attr('fill-opacity', 1);
 
                     tooltip
-                        .attr('transform', 'translate(' + (centerX + ((consumoRadio + 0) * sinA)) + ',' + (centerY + ((consumoRadio + 0) * cosA)) + ')')
+                        .attr('transform', 'translate(' + (centerX + ((consumoRadio ) * sinA)) + ',' + (centerY + ((consumoRadio ) * cosA)) + ')')
+                   
                     tooltip_fecha
                         .text(function() {
-
                             var tsDate = iso.parse(d.ts);
                             return tooltipDateFormat(tsDate);
                         });
@@ -942,6 +941,25 @@
                         .transition(150)
                         .attr('fill', colorDemand(d.dem))
                         .attr('fill-opacity', 1);
+
+
+                    consumoCircle
+                        .transition()
+                        .attr({
+                            'r': function() {
+                                return scaleRadius(d.dem);
+                            },
+                            'stroke': function() {
+                                return colorDemand(d.dem);
+                            },
+                            'stroke-opacity': .9
+                        })
+
+
+
+
+
+
 
                 })
                 .each(function(d) {
@@ -963,21 +981,7 @@
                             console.log("click", iso.parse(d.ts), that.datum(), d[that.datum()])
                         })
                         .on('mouseover', function() {
-                            var that = d3.select(this),
-                                c = consumoCircle
-                                .transition()
-                                .attr({
-                                    'r': function() {
-                                        return scaleRadius(d.dem);
-                                    },
-                                    'stroke': function() {
-                                        return colorDemand(d.dem);
-                                    },
-                                    'stroke-opacity': .9
-                                })
-
-
-
+                            var that = d3.select(this);
                             that.transition()
                                 .attr('fill', '#' + tablaIdsInfo[that.datum()].highlightColor);
                         })
@@ -1134,7 +1138,7 @@
 
                 try {
                     document.styleSheets[0].addRule('#id_' + id + ':before', 'content: "' + datos.icon + '"; color:' + datos.color + ';');
-                } catch(err) {
+                } catch (err) {
                     console.log(err)
                 }
 
