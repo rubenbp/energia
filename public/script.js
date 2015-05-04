@@ -16,8 +16,9 @@
     var canvasWidth = 960,
         canvasHeight = 600;
 
-    var centerX = canvasWidth * .4 //canvasWidth / 2;
-    var centerY = canvasHeight / 2;
+    var centerX = canvasWidth * .4,
+        centerY = canvasHeight / 2,
+        lastJsonData;
 
 
     function grados_a_radianes(grados) {
@@ -77,7 +78,7 @@
 
         for (i = 0; i < ln; i++) {
             calc = (arr[i] * 100) / sum;
-            parciales.push( calc >=0 ? calc : 0);
+            parciales.push(calc >= 0 ? calc : 0);
         }
 
         return parciales;
@@ -104,6 +105,7 @@
 
     var iso = d3.time.format.utc("%Y-%m-%dT%H:%M:%S.%LZ");
     var tooltipDateFormat = ES.timeFormat("%A %d, %H:%M");
+    var bloqueDateFormat = ES.timeFormat("%A %d,%H:%M");
 
 
     var getCanvasCenterX = function() {
@@ -389,29 +391,47 @@
     var desglose = svg.append('g')
         .attr('id', 'desglose_grupo')
         .attr('transform', 'translate(' + (centerX + radio + 100) + ',' + (centerY - (radio * .75)) + ')')
-        .attr('opacity',0 )
+        .attr('opacity', 0);
+
+    desglose.append('rect')
+        .attr('y', formulaRadioDesglose + 20)
+        .attr('width', 165)
+        .attr('height', 3)
+        .attr('fill', '#666');
+
+    var fechaBloque = desglose.append('text')
+        .text("hoy")
+        .attr('y', formulaRadioDesglose + 39)
+        .attr('text-anchor', 'start')
+        .style('font-size', '14')
+        .style('font-family', 'Roboto Slab, Helvetica Neue, Helvetica, sans-serif')
+        .attr('fill', '#666');
+
+    var horaBloque = desglose.append('text')
+        .text("21:00h")
+        .attr('y', formulaRadioDesglose + 62)
+        .attr('text-anchor', 'start')
+        .style('font-size', '27')
+        .style('font-family', 'Roboto Slab, Helvetica Neue, Helvetica, sans-serif')
+        .attr('fill', '#666');
+
     var desgloseBloqueRenovable = desglose.append('g');
 
     var altoRenovables = desgloseBloqueRenovable.append('rect')
-        .attr('x',-8)
-        .attr('width',2)
-        .attr('height',200)
-        .attr('fill','#669C83' )
+        .attr('x', -8)
+        .attr('width', 2)
+        .attr('height', 200)
+        .attr('fill', '#669C83')
 
     var textoRenovables = desgloseBloqueRenovable.append('text')
-        .text("renovables 33%")
+        .text("--")
         .attr('text-anchor', 'middle')
         .style('font-size', '13')
         .style('font-family', 'Roboto Slab, Helvetica Neue, Helvetica, sans-serif')
-        .attr('fill','#669C83' )
-
-        .attr('x', -100 )
-        .attr('y', -12 )
-        
+        .attr('fill', '#669C83')
+        .attr('x', -100)
+        .attr('y', -12)
         .attr('transform', 'rotate(-90)')
-        
-
-    //desgloseBloqueRenovable.attr('transform', 'rotate(-45)')
 
 
     //PINTO EL TOOLTIP
@@ -587,33 +607,31 @@
         var coords = d3.mouse(this),
             x = coords[0],
             y = coords[1],
-            xs = (centerX) - x,
-            ys = (centerY) - y;
-
-        xs = xs * xs;
-        ys = ys * ys;
-
-        var sqrt = Math.sqrt(xs + ys)
-
-        if (sqrt > radio) {
-            isOuterRadio = 0;
-        } else {
-            isOuterRadio = 1;
-        }
-
-        var offset = {
+            mth = Math,
+            xs = mth.pow(centerX - x, 2),
+            ys = mth.pow(centerY - y, 2),
+            sqrt = mth.sqrt(xs + ys),
+            offset = {
                 'left': svg.offsetLeft,
                 'top': svg.offsetTop
             },
             xsign = (x > centerX) ? 1 : 0,
-            ysign = (y > centerY) ? 1 : 0;
-
-
-        var tooltipFmtName = ['fmt_', xsign, '_', ysign].join("");
+            ysign = (y > centerY) ? 1 : 0,
+            tooltipFmtName = ['fmt_', xsign, '_', ysign].join("");
 
         if (tooltipFmtName != currentTooltipFormat) {
             setTooltip('fmt_' + xsign + '_' + ysign);
             currentTooltipFormat = tooltipFmtName;
+        }
+
+        if (isOuterRadio != +(sqrt <= radio)) {
+
+            isOuterRadio = +(sqrt <= radio);
+
+            if (!isOuterRadio) {
+                dispatch.mouseenter(this, lastJsonData);
+            }
+
         }
 
 
@@ -650,7 +668,7 @@
     var scaleRadius = d3.scale.linear()
         .range([0, radio]);
 
-    var dispatch = d3.dispatch("start", "load", "statechange", "mouseenter");
+    var dispatch = d3.dispatch("mouseenter");
 
     //dispatch.on("mouseenter", pintaDesglose)
     dispatch.on("mouseenter", debounce(pintaDesglose, 125))
@@ -703,29 +721,35 @@
             tsDate = iso.parse(datos.ts),
             h = tsDate.getHours(),
             m = tsDate.getMinutes(),
-            ecoPercent = rd3 ( demandaHora, [datos.eol, datos.hid, datos.sol].sum(true) ),
-            path;
+            ecoPercent = rd3(demandaHora, [datos.eol, datos.hid, datos.sol].sum(true)),
+            path,
+            i;
 
         //console.log ('eco', ecoPercent, (formulaRadioDesglose/100 * ecoPercent) );
 
-            desglose
-                        .attr('opacity',1 ) 
+        desglose
+            .attr('opacity', 1)
 
-            textoRenovables.text( "renovables " + ES.numberFormat(",.2f")(ecoPercent) + "% ")
+        textoRenovables.text("renovables " + ES.numberFormat(",.2f")(ecoPercent) + "% ")
             .transition()
+            .attr('x', -(formulaRadioDesglose / 100 * ecoPercent) / 2)
 
-            .attr('x', - (formulaRadioDesglose/100 * ecoPercent) /2 )
-            
-            altoRenovables
+        altoRenovables
             .transition()
-            .attr('height',(formulaRadioDesglose/100 * ecoPercent) )
+            .attr('height', (formulaRadioDesglose / 100 * ecoPercent))
+
+        fechaBloque
+            .text(ES.timeFormat("%A %d")(tsDate))
+
+        horaBloque
+            .text(ES.timeFormat("%H:%M")(tsDate) + "h")
 
         var scaleDesglose = d3.scale.linear()
             .range([0, formulaRadioDesglose]);
 
         var tabla = [];
 
-        for (var i = 0; i < tablaIdsOrdenados.length; i++) {
+        for (i = 0; i < tablaIdsOrdenados.length; i++) {
             tabla[i] = {
                 id: tablaIdsOrdenados[i],
                 datos: datos[tablaIdsOrdenados[i]]
@@ -743,7 +767,7 @@
             .attr('id', function(d, i) {
                 return "des_" + d.id;
             })
-            .attr('class','j-bloque')
+            .attr('class', 'j-bloque')
             .each(function() {
                 var that = d3.select(this);
 
@@ -783,7 +807,7 @@
                     .style('fill', '#B3B3B3')
                     .style('fill', function(d) {
                         return '#' + tablaIdsInfo[d.id].highlightColor;
-                    }) /**/
+                    })
                     .attr('transform', 'rotate(-45)');
 
                 that.append('path')
@@ -794,15 +818,15 @@
                     })
 
 
-            }).attr('transform',function (d,i){
+            }).attr('transform', function(d, i) {
 
-                return 'translate(0,' +( 50*i) + ')'
+                return 'translate(0,' + (50 * i) + ')'
 
             })
 
 
         //UPDATE
-        var safeStep = 32,
+        var safeStep = 33,
             safeStepCalc = 0,
             colisionCounter = 0,
             minPercentStep = 8;
@@ -929,12 +953,13 @@
             var now = new Date(),
                 currentHourDate = iso.parse(datosJson[datosJson.length - 1].ts),
                 currentHourDateRotation = horaRotation((currentHourDate.getHours() * 60) + (currentHourDate.getMinutes())),
-                arcoPorcion = (360 / datosJson.length)/1.05;
+                arcoPorcion = (360 / datosJson.length) / 1.05;
 
             // LANZO EL ÚLTIMO DATO DISPONIBLE
 
-            dispatch.mouseenter(this, datosJson[datosJson.length - 1]);
-
+            if (!isOuterRadio) {
+                dispatch.mouseenter(this, datosJson[datosJson.length - 1]);
+            }
             // SELECCIONO LOS RADIOS QUE ALBERGAN CADA UNA DE LAS FRANJAS DE TIEMPO
 
             var rads = svg.select('#hostRads').selectAll('.rad')
@@ -1126,7 +1151,7 @@
                 id;
 
             //console.log('datosJson', datosJson)
-            var dLast = datosJson[datosJson.length - 1];
+            var dLast = lastJsonData = datosJson[datosJson.length - 1];
             // CALCULAMOS LA SUMA DE LAS DIFERENTES ENERGÍAS PROVEEDORAS
             var generadoras = [dLast.eol, dLast.hid, dLast.sol, dLast.aut, dLast.gf, dLast.nuc, dLast.car, dLast.cc];
             // CALCULAMOS LOS PORCENTAJES PARCIALES
