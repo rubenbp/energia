@@ -1103,7 +1103,7 @@
 
                 that.select('.energia__titulo')
                     .text(datos.nombre) //.text(that.datum().nombre)
-                    .style('color', datos.color);
+                    .style('color', datos.highlightColor);
                 that.selectAll('.energia__subtitulo')
                     .data(['Aportación actual', 'Promedio 24h', 'Emisiones CO<sub>2</sub>'])
                     .each(function(d) {
@@ -1137,7 +1137,7 @@
                     });
 
                 try {
-                    document.styleSheets[0].addRule('#id_' + id + ':before', 'content: "' + datos.icon + '"; color:' + datos.color + ';');
+                    document.styleSheets[0].addRule('#id_' + id + ':before', 'content: "' + datos.icon + '"; color:' + datos.highlightColor + ';');
                 } catch (err) {
                     console.log(err)
                 }
