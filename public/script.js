@@ -397,7 +397,7 @@
         .attr('y', formulaRadioDesglose + 20)
         .attr('width', 165)
         .attr('height', 3)
-        .attr('fill', '#666');
+        .attr('fill', '#3C3C3C');
 
     var fechaBloque = desglose.append('text')
         .text("hoy")
