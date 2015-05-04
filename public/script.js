@@ -6,6 +6,7 @@
     var VEL_INTERFAZ = 600,
         radio = 250,
         radioHours = radio + 12,
+        formulaRadioDesglose = (radio * .75) * 2,
         pi = Math.PI,
         demanda,
         consumoMaximo,
@@ -34,7 +35,7 @@
     }
 
     //SUMA LOS ELEMENTOS DEL ARRAY
-    Array.prototype.sum = function(sumaPositivos) {
+    Array.prototype.sum = function(ignoraNegativos) {
         var sum = 0,
             ln = this.length,
             i;
@@ -42,10 +43,11 @@
         for (i = 0; i < ln; i++) {
             if (typeof(this[i]) === 'number') {
 
-                //if (sumaPositivos && this[i] > 0){}
-                sum += this[i];
-
-
+                if (ignoraNegativos && this[i] < 0) {
+                    continue;
+                } else {
+                    sum += this[i];
+                }
             }
         }
 
@@ -70,10 +72,12 @@
         var sum = arraySum(arr),
             parciales = [],
             ln = arr.length,
+            calc,
             i;
 
         for (i = 0; i < ln; i++) {
-            parciales.push((arr[i] * 100) / sum);
+            calc = (arr[i] * 100) / sum;
+            parciales.push( calc >=0 ? calc : 0);
         }
 
         return parciales;
@@ -384,7 +388,30 @@
 
     var desglose = svg.append('g')
         .attr('id', 'desglose_grupo')
-        .attr('transform', 'translate(' + (centerX + radio + 70) + ',' + (centerY - (radio * .75)) + ')')
+        .attr('transform', 'translate(' + (centerX + radio + 100) + ',' + (centerY - (radio * .75)) + ')')
+        .attr('opacity',0 )
+    var desgloseBloqueRenovable = desglose.append('g');
+
+    var altoRenovables = desgloseBloqueRenovable.append('rect')
+        .attr('x',-8)
+        .attr('width',2)
+        .attr('height',200)
+        .attr('fill','#669C83' )
+
+    var textoRenovables = desgloseBloqueRenovable.append('text')
+        .text("renovables 33%")
+        .attr('text-anchor', 'middle')
+        .style('font-size', '13')
+        .style('font-family', 'Roboto Slab, Helvetica Neue, Helvetica, sans-serif')
+        .attr('fill','#669C83' )
+
+        .attr('x', -100 )
+        .attr('y', -12 )
+        
+        .attr('transform', 'rotate(-90)')
+        
+
+    //desgloseBloqueRenovable.attr('transform', 'rotate(-45)')
 
 
     //PINTO EL TOOLTIP
@@ -636,6 +663,7 @@
 
 
     //http://davidwalsh.name/javascript-debounce-function
+
     // Returns a function, that, as long as it continues to be invoked, will not
     // be triggered. The function will be called after it stops being called for
     // N milliseconds. If `immediate` is passed, trigger the function on the
@@ -665,7 +693,9 @@
         // CALCULAMOS LOS PORCENTAJES PARCIALES
         var porcentajesDemanda = calcArrayPercents(generadoras);
         //DEMANDA REAL, ES DECIR POR MEDIO GENERATIVO SUMANDO TODO (PROTOTIPO de ARRAY)
-        var demandaHora = generadoras.sum();
+        var demandaHora = generadoras.sum(true);
+
+
 
         var acumuladoInner = 0,
             grosorGeneradora = 0,
@@ -673,10 +703,25 @@
             tsDate = iso.parse(datos.ts),
             h = tsDate.getHours(),
             m = tsDate.getMinutes(),
+            ecoPercent = rd3 ( demandaHora, [datos.eol, datos.hid, datos.sol].sum(true) ),
             path;
 
+        //console.log ('eco', ecoPercent, (formulaRadioDesglose/100 * ecoPercent) );
+
+            desglose
+                        .attr('opacity',1 ) 
+
+            textoRenovables.text( "renovables " + ES.numberFormat(",.2f")(ecoPercent) + "% ")
+            .transition()
+
+            .attr('x', - (formulaRadioDesglose/100 * ecoPercent) /2 )
+            
+            altoRenovables
+            .transition()
+            .attr('height',(formulaRadioDesglose/100 * ecoPercent) )
+
         var scaleDesglose = d3.scale.linear()
-            .range([0, (radio * .75) * 2]);
+            .range([0, formulaRadioDesglose]);
 
         var tabla = [];
 
@@ -688,7 +733,7 @@
         }
 
 
-        var bloques = desglose.selectAll('g')
+        var bloques = desglose.selectAll('.j-bloque')
             .data(tabla, function(d, i) {
                 return d.id;
             });
@@ -698,6 +743,7 @@
             .attr('id', function(d, i) {
                 return "des_" + d.id;
             })
+            .attr('class','j-bloque')
             .each(function() {
                 var that = d3.select(this);
 
@@ -748,6 +794,10 @@
                     })
 
 
+            }).attr('transform',function (d,i){
+
+                return 'translate(0,' +( 50*i) + ')'
+
             })
 
 
@@ -767,7 +817,7 @@
 
 
             safeStepCalc = safeStep * colisionCounter;
-            grosorGeneradora = porcentajesDemanda[i] / 100 * ((radio * .75) * 2);
+            grosorGeneradora = porcentajesDemanda[i] / 100 * formulaRadioDesglose;
 
 
             var that = d3.select(this)
@@ -879,7 +929,7 @@
             var now = new Date(),
                 currentHourDate = iso.parse(datosJson[datosJson.length - 1].ts),
                 currentHourDateRotation = horaRotation((currentHourDate.getHours() * 60) + (currentHourDate.getMinutes())),
-                arcoPorcion = 360 / datosJson.length;
+                arcoPorcion = (360 / datosJson.length)/1.05;
 
             // LANZO EL ÚLTIMO DATO DISPONIBLE
 
@@ -964,8 +1014,6 @@
                 })
                 .each(function(d) {
 
-
-
                     //CREO LOS 'HUECOS'
                     var group = d3.select(this),
                         ln = 8,
@@ -991,7 +1039,7 @@
                             d3.select(this).transition()
                                 .attr('fill', '#' + tablaIdsInfo[that.datum()].color);
                         })
-                    .attr('fill', function(d, n) {
+                        .attr('fill', function(d, n) {
                             var that = d3.select(this)
                             return '#' + tablaIdsInfo[that.datum()].color;
                         })
@@ -1019,7 +1067,7 @@
                 // CALCULAMOS LOS PORCENTAJES PARCIALES
                 var porcentajesDemanda = calcArrayPercents(generadoras);
                 //DEMANDA REAL, ES DECIR POR MEDIO GENERATIVO SUMANDO TODO (PROTOTIPO de ARRAY)
-                var demandaHora = generadoras.sum();
+                var demandaHora = generadoras.sum(true);
                 //console.log('demandaHora', demandaHora, porcentajesDemanda)
 
                 var acumuladoInner = 0,
@@ -1084,7 +1132,7 @@
             // CALCULAMOS LOS PORCENTAJES PARCIALES
             var porcentajesDemanda = calcArrayPercents(generadoras);
             //DEMANDA REAL, ES DECIR POR MEDIO GENERATIVO SUMANDO TODO (PROTOTIPO de ARRAY)
-            var demandaHora = generadoras.sum();
+            var demandaHora = generadoras.sum(true);
 
 
             //ACTUALIZO HTML
