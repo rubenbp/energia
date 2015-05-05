@@ -382,33 +382,33 @@
         currentTooltipFormat,
         tooltip = svg.append('g').attr('id', 'dem-tooltip').attr('opacity', 0),
         tooltip_shadow = tooltip.append('rect')
-        .attr({
-            'width': tooltipWidth + 4,
-            'height': tooltipHeight + 4,
-            'fill': 'black',
-            'fill-opacity': .15
-        }),
+            .attr({
+                'width': tooltipWidth + 4,
+                'height': tooltipHeight + 4,
+                'fill': 'black',
+                'fill-opacity': .15
+            }),
         tooltip_rect = tooltip.append('rect')
-        .attr({
-            'width': tooltipWidth,
-            'height': tooltipHeight
-        }),
+            .attr({
+                'width': tooltipWidth,
+                'height': tooltipHeight
+            }),
         tooltip_fecha = tooltip.append('text')
-        .attr('id', 'fecha')
-        .attr('x', 5)
-        .attr('y', 11)
-        .attr('text-anchor', 'start')
-        .style('font-size', '11')
-        .style('font-family', 'Roboto Slab, Helvetica Neue, Helvetica, sans-serif')
-        .style('fill', 'black')
-        .style('fill-opacity', .75),
+            .attr('id', 'fecha')
+            .attr('x', 5)
+            .attr('y', 11)
+            .attr('text-anchor', 'start')
+            .style('font-size', '11')
+            .style('font-family', 'Roboto Slab, Helvetica Neue, Helvetica, sans-serif')
+            .style('fill', 'black')
+            .style('fill-opacity', .75),
         tooltip_mw = tooltip.append('text')
-        .text('')
-        .attr('x', 15)
-        .attr('y', 24)
-        .style('font-size', '13')
-        .style('font-family', 'Roboto Slab, Helvetica Neue, Helvetica, sans-serif')
-        .style('fill', 'white');
+            .text('')
+            .attr('x', 15)
+            .attr('y', 24)
+            .style('font-size', '13')
+            .style('font-family', 'Roboto Slab, Helvetica Neue, Helvetica, sans-serif')
+            .style('fill', 'white');
 
 
 
@@ -553,24 +553,25 @@
             tooltipFmtName = ['fmt_', xsign, '_', ysign].join("");
 
         if (tooltipFmtName != currentTooltipFormat) {
-            setTooltip('fmt_' + xsign + '_' + ysign);
+            setTooltip(tooltipFmtName);
             currentTooltipFormat = tooltipFmtName;
         }
 
         if (isOuterRadio != +(sqrt <= radio)) {
 
+
+
             isOuterRadio = +(sqrt <= radio);
+
+            groupCircle.transition(100).style('opacity', isOuterRadio);
+            groupConsumo.transition(100).style('opacity', isOuterRadio);
+            tooltip.transition(100).style('opacity', isOuterRadio);
 
             if (!isOuterRadio) {
                 dispatch.mouseenter(this, lastJsonData);
             }
 
         }
-
-
-        groupCircle.transition(100).style('opacity', isOuterRadio);
-        groupConsumo.transition(100).style('opacity', isOuterRadio);
-        tooltip.transition(100).style('opacity', isOuterRadio);
 
     }
 
@@ -587,13 +588,11 @@
     }
 
     var sizes = d3.scale.linear()
-        .range([10, 24]);
-
-    var opacityScale = d3.scale.linear()
-        .range([.4, 1]);
-
-    var colorDemand = d3.scale.linear()
-        .range(['#996A00', '#990000']);
+            .range([10, 24]),
+        opacityScale = d3.scale.linear()
+            .range([.4, 1]),
+        colorDemand = d3.scale.linear()
+            .range(['#996A00', '#990000']);
 
     // ESTA ESCALA ME PERMITE ESTABLECER EL MÁXIMO Y MÍNIMO CONSUMO EN FUNCIÓN DE LA DEMANDA
     // Y VARIAR EL MÁXIMO PORCENTAJE DE RADIO
@@ -755,7 +754,6 @@
         bloques.each(function(d, i) {
 
 
-
             if (porcentajesDemanda[i - 1] < minPercentStep) {
                 colisionCounter++;
             }
@@ -908,7 +906,6 @@
                 })
                 .on('mouseenter', function(d) {
 
-
                     dispatch.mouseenter(this, d);
 
                     var tsDate = iso.parse(d.ts),
@@ -962,10 +959,6 @@
 
 
 
-
-
-
-
                 })
                 .each(function(d) {
 
@@ -978,30 +971,27 @@
                     group.selectAll('path')
                         .data(tablaIdsOrdenados)
                         .enter().append('path')
-
                     .on('click', function() {
-                            var that = d3.select(this);
-                            console.log("click", iso.parse(d.ts), that.datum(), d[that.datum()])
+                        var that = d3.select(this);
+                        console.log("click", iso.parse(d.ts), that.datum(), d[that.datum()])
                         })
-                        .on('mouseover', function() {
-                            var that = d3.select(this);
-                            that.transition()
-                                .attr('fill', '#' + tablaIdsInfo[that.datum()].highlightColor);
-                        })
-                        .on('mouseout', function() {
-
-                            var that = d3.select(this);
-                            d3.select(this).transition()
-                                .attr('fill', '#' + tablaIdsInfo[that.datum()].color);
-                        })
-                        .attr('fill', function(d, n) {
-                            var that = d3.select(this)
-                            return '#' + tablaIdsInfo[that.datum()].color;
-                        })
+                    .on('mouseover', function() {
+                        var that = d3.select(this);
+                        that.transition()
+                            .attr('fill', '#' + tablaIdsInfo[that.datum()].highlightColor);
+                    })
+                    .on('mouseout', function() {
+                        var that = d3.select(this);
+                        d3.select(this).transition()
+                            .attr('fill', '#' + tablaIdsInfo[that.datum()].color);
+                    })
+                    .attr('fill', function(d, n) {
+                        var that = d3.select(this)
+                        return '#' + tablaIdsInfo[that.datum()].color;
+                    })
 
 
                     n++;
-
 
 
                 })
@@ -1088,9 +1078,8 @@
 
             energias.each(function(d, i) {
 
-                var datos = tablaIdsInfo[d];
-
-                var that = d3.select(this),
+                var datos = tablaIdsInfo[d],
+                    that = d3.select(this),
                     id = d;
 
                 that.select('.energia__titulo')
