@@ -7,33 +7,16 @@
         radio = 250,
         radioHours = radio + 12,
         formulaRadioDesglose = (radio * .75) * 2,
-        pi = Math.PI,
+        isOuterRadio = 0,
         demanda,
         consumoMaximo,
         consumoMinimo,
-        consumoMedio;
-
-    var canvasWidth = 960,
-        canvasHeight = 600;
-
-    var centerX = canvasWidth * .4,
+        consumoMedio,
+        canvasWidth = 960,
+        canvasHeight = 600,
+        centerX = canvasWidth * .4,
         centerY = canvasHeight / 2,
         lastJsonData;
-
-
-    function grados_a_radianes(grados) {
-        return 2 * Math.PI / 360 * grados;
-    }
-
-    function rd3(maxi, dato, medida) {
-
-        var mx = +maxi;
-        // la variable medida es la que marca. 180 es un hemiciclo, 360 es un circulo completo
-        var med = (medida) ? medida : 100;
-        var resultado = (dato * med) / mx;
-
-        return resultado;
-    }
 
     //SUMA LOS ELEMENTOS DEL ARRAY
     Array.prototype.sum = function(ignoraNegativos) {
@@ -53,24 +36,23 @@
         }
 
         return sum;
-
     }
 
-    function arraySum(arr) {
-        var sum = 0,
-            ln = arr.length,
-            i;
+    function grados_a_radianes(grados) {
+    
+        return Math.PI / 180 * grados;
+    }
 
-        for (i = 0; i < ln; i++) {
-            sum += arr[i];
-        }
-
-        return sum;
+    function rd3(maxi, dato, medida) {
+        // la variable medida es la que marca. 180 es un hemiciclo, 360 es un circulo completo
+        var mx = +maxi,
+            med = (medida) ? medida : 100;
+        return (dato * med) / mx;
     }
 
     function calcArrayPercents(arr) {
 
-        var sum = arraySum(arr),
+        var sum = arr.sum(),
             parciales = [],
             ln = arr.length,
             calc,
@@ -87,201 +69,170 @@
 
 
     var es_ES = {
-        "decimal": ",",
-        "thousands": ".",
-        "grouping": [3],
-        "currency": ["€", ""],
-        "dateTime": "%a %b %e %X %Y",
-        "date": "%d/%m/%Y",
-        "time": "%H:%M:%S",
-        "periods": ["AM", "PM"],
-        "days": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
-        "shortDays": ["Dom", "Lun", "Mar", "Mi", "Jue", "Vie", "Sab"],
-        "months": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-        "shortMonths": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
-    };
-
-    var ES = d3.locale(es_ES);
-
-    var iso = d3.time.format.utc("%Y-%m-%dT%H:%M:%S.%LZ");
-    var tooltipDateFormat = ES.timeFormat("%A %d, %H:%M");
-    var bloqueDateFormat = ES.timeFormat("%A %d,%H:%M");
+            "decimal": ",",
+            "thousands": ".",
+            "grouping": [3],
+            "currency": ["€", ""],
+            "dateTime": "%a %b %e %X %Y",
+            "date": "%d/%m/%Y",
+            "time": "%H:%M:%S",
+            "periods": ["AM", "PM"],
+            "days": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+            "shortDays": ["Dom", "Lun", "Mar", "Mi", "Jue", "Vie", "Sab"],
+            "months": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+            "shortMonths": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+        },
+        ES = d3.locale(es_ES),
+        iso = d3.time.format.utc("%Y-%m-%dT%H:%M:%S.%LZ"),
+        tooltipDateFormat = ES.timeFormat("%A %d, %H:%M")
 
 
-    var getCanvasCenterX = function() {
-        return canvasWidth / 2;
-    }
-    var getCanvasCenterY = function() {
-        return canvasHeight / 2;
-    }
-
-
-    var tablaIdsOrdenados = ['eol', 'hid', 'sol', 'aut', 'gf', 'nuc', 'car', 'cc'];
-
-    var tablaIdsInfo = {
-        'eol': {
-            'id': 'eol',
-            'nombre': 'Eólica',
-            'nombreAbrev': 'Eólica',
-            'color': '7EAADD',
-            'highlightColor': 'c6d1dd',
-            'icon': '\\e82b',
-            'med24h': 0,
-            'percent24h': 0
+    var tablaIdsOrdenados = ['eol', 'hid', 'sol', 'aut', 'gf', 'nuc', 'car', 'cc'],
+        tablaIdsInfo = {
+            'eol': {
+                'id': 'eol',
+                'nombre': 'Eólica',
+                'nombreAbrev': 'Eólica',
+                'color': '7EAADD',
+                'highlightColor': 'c6d1dd',
+                'icon': '\\e82b',
+            },
+            'hid': {
+                'id': 'hid',
+                'nombre': 'Hidraúlica',
+                'nombreAbrev': 'Hidraúlica',
+                'color': '33537A',
+                'highlightColor': '446fa4',
+                'icon': '\\e82d'
+            },
+            'sol': {
+                'id': 'sol',
+                'nombre': 'Solar/Solar Térmica',
+                'nombreAbrev': 'Solar/S.Térmica',
+                'color': 'F5A623',
+                'highlightColor': 'f5cc89',
+                'icon': '\\e82c'
+            },
+            'aut': {
+                'id': 'aut',
+                'nombre': 'Régimen Especial',
+                'nombreAbrev': 'R. Especial',
+                'color': '9B9B9B',
+                'highlightColor': 'bdbdbd',
+                'icon': '\\e800'
+            },
+            'gf': {
+                'id': 'gf',
+                'nombre': 'Gas + Fuel',
+                'nombreAbrev': 'Gas+Fuel',
+                'color': '6F93A4',
+                'highlightColor': '96C6DD',
+                'icon': '\\e806'
+            },
+            'nuc': {
+                'id': 'nuc',
+                'nombre': 'Nuclear',
+                'nombreAbrev': 'Nuclear',
+                'color': 'BD10E0',
+                'highlightColor': 'd712ff',
+                'icon': '\\e807'
+            },
+            'car': {
+                'id': 'car',
+                'nombre': 'Carbón',
+                'nombreAbrev': 'Carbón',
+                'color': '583636',
+                'highlightColor': '795d5d',
+                'icon': '\\e805'
+            },
+            'cc': {
+                'id': 'cc',
+                'nombre': 'Ciclo Combinado',
+                'nombreAbrev': 'C. Combinado',
+                'color': '3D4163',
+                'highlightColor': '686fa9',
+                'icon': '\\e804'
+            }
         },
-        'hid': {
-            'id': 'hid',
-            'nombre': 'Hidraúlica',
-            'nombreAbrev': 'Hidraúlica',
-            'color': '33537A',
-            'highlightColor': '446fa4',
-            'icon': '\\e82d'
+        tablaIdsConsumos = {
+            'eol': {
+                'med24h': 0,
+                'percent24h': []
+            },
+            'hid': {
+                'med24h': 0,
+                'percent24h': []
+            },
+            'sol': {
+                'med24h': 0,
+                'percent24h': []
+            },
+            'aut': {
+                'med24h': 0,
+                'percent24h': []
+            },
+            'gf': {
+                'med24h': 0,
+                'percent24h': []
+            },
+            'nuc': {
+                'med24h': 0,
+                'percent24h': []
+            },
+            'car': {
+                'med24h': 0,
+                'percent24h': []
+            },
+            'cc': {
+                'med24h': 0,
+                'percent24h': []
+            }
         },
-        'sol': {
-            'id': 'sol',
-            'nombre': 'Solar/Solar Térmica',
-            'nombreAbrev': 'Solar/S.Térmica',
-            'color': 'F5A623',
-            'highlightColor': 'f5cc89',
-            'icon': '\\e82c'
+        tablaEmisiones = {
+            "icb": 0,
+            "inter": 0,
+            "car": 0.95,
+            "aut": 0.27,
+            "sol": 0,
+            "cc": 0.37,
+            "hid": 0,
+            "gf": 0.7,
+            "nuc": 0,
+            "eol": 0
         },
-        'aut': {
-            'id': 'aut',
-            'nombre': 'Régimen Especial',
-            'nombreAbrev': 'R. Especial',
-            'color': '9B9B9B',
-            'highlightColor': 'bdbdbd',
-            'icon': '\\e800'
+        parametrosUsados = {
+            'dem': true,
+            'icb': true,
+            'inter': true,
+            'car': true,
+            'aut': true,
+            'sol': true,
+            'cc': true,
+            'hid': true,
+            'gf': true,
+            'nuc': true,
+            'eol': true,
+            'ts': true
         },
-        'gf': {
-            'id': 'gf',
-            'nombre': 'Gas + Fuel',
-            'nombreAbrev': 'Gas+Fuel',
-            'color': '6F93A4',
-            'highlightColor': '96C6DD',
-            'icon': '\\e806'
-        },
-        'nuc': {
-            'id': 'nuc',
-            'nombre': 'Nuclear',
-            'nombreAbrev': 'Nuclear',
-            'color': 'BD10E0',
-            'highlightColor': 'd712ff',
-            'icon': '\\e807'
-        },
-        'car': {
-            'id': 'car',
-            'nombre': 'Carbón',
-            'nombreAbrev': 'Carbón',
-            'color': '583636',
-            'highlightColor': '795d5d',
-            'icon': '\\e805'
-        },
-        'cc': {
-            'id': 'cc',
-            'nombre': 'Ciclo Combinado',
-            'nombreAbrev': 'C. Combinado',
-            'color': '3D4163',
-            'highlightColor': '686fa9',
-            'icon': '\\e804'
-        }
-    };
-
-    var tablaIdsConsumos = {
-        'eol': {
-            'med24h': 0,
-            'percent24h': 0
-        },
-        'hid': {
-            'med24h': 0,
-            'percent24h': 0
-        },
-        'sol': {
-            'med24h': 0,
-            'percent24h': 0
-        },
-        'aut': {
-            'med24h': 0,
-            'percent24h': 0
-        },
-        'gf': {
-            'med24h': 0,
-            'percent24h': 0
-        },
-        'nuc': {
-            'med24h': 0,
-            'percent24h': 0
-        },
-        'car': {
-            'med24h': 0,
-            'percent24h': 0
-        },
-        'cc': {
-            'med24h': 0,
-            'percent24h': 0
-        }
-    };
-
-    var tablaEmisiones = {
-        "icb": 0,
-        "inter": 0,
-        "car": 0.95,
-        "aut": 0.27,
-        "sol": 0,
-        "cc": 0.37,
-        "hid": 0,
-        "gf": 0.7,
-        "nuc": 0,
-        "eol": 0
-    }
-
-    var parametrosUsados = {
-        'dem': true,
-        'icb': true,
-        'inter': true,
-        'car': true,
-        'aut': true,
-        'sol': true,
-        'cc': true,
-        'hid': true,
-        'gf': true,
-        'nuc': true,
-        'eol': true,
-        'ts': true
-    };
-
-    var energiasMostradas = {
-        'icb': true,
-        'inter': true,
-        'car': true,
-        'aut': true,
-        'sol': true,
-        'cc': true,
-        'hid': true,
-        'gf': true,
-        'nuc': true,
-        'eol': true
-    };
+        energiasMostradas = {
+            'icb': true,
+            'inter': true,
+            'car': true,
+            'aut': true,
+            'sol': true,
+            'cc': true,
+            'hid': true,
+            'gf': true,
+            'nuc': true,
+            'eol': true
+        };
 
 
     //DIBUJO BASE 
 
-
-
     var svg = d3.select("#chart").append('svg')
         .attr('width', canvasWidth)
         .attr('height', canvasHeight)
-        //.attr("viewBox", "0 0 "+ canvasWidth +" "+ canvasHeight)
-        //.attr("preserveAspectRatio", "xMinYMin meet");
-
-    var defs = svg.append("defs");
-
-    svg.append("symbol")
-        .attr("id", "symbol_rayito")
-        .attr('viewBox', '0 0 6.88 10.13')
-        .append('path')
-        .attr("d", "M2.669,6.257 L6.882,0.727 L5.122,0 L0,7.622 L3.843,6.96 L1.723,10.131 L2.26,10.133 L6.533,5.355 L2.669,6.257 z")
-        .attr('fill', '#fff');
 
     svg.append('rect')
         .attr('id', 'bg')
@@ -307,10 +258,9 @@
 
     svg.append('g').attr('id', 'horas');
 
-    var hostRads = svg.append('g').attr('id', 'hostRads');
-
-    var groupCircle = svg.append('g').attr('id', 'consumo');
-    var consumoCircle = groupCircle.append('circle')
+    var hostRads = svg.append('g').attr('id', 'hostRads'),
+        groupCircle = svg.append('g').attr('id', 'consumo'),
+        consumoCircle = groupCircle.append('circle')
         .attr('r', radio)
         .attr('cx', centerX)
         .attr('cy', centerY)
@@ -318,10 +268,10 @@
         .attr('fill', 'none')
         .attr('stroke-dasharray', 3)
         .attr('stroke-width', 2)
-        .attr('stroke-opacity', 0)
+        .attr('stroke-opacity', 0);
 
-    var groupConsumo = svg.append('g').attr('id', 'consumo-dot');
-    var consumoDot = groupConsumo.append('circle')
+    var groupConsumo = svg.append('g').attr('id', 'consumo-dot'),
+        consumoDot = groupConsumo.append('circle')
         .attr('r', 5)
         .attr('cx', centerX)
         .attr('cy', centerY)
@@ -331,7 +281,7 @@
 
 
     var grupoHoras = d3.select("svg #horas")
-        .attr('transform', 'translate(' + (centerX) + ',' + (centerY) + ')');
+        .attr('transform', 'translate(' + centerX + ',' + centerY + ')');
 
     // PASAR MINUTOS 24*60 
     var horaRotation = d3.scale.linear()
@@ -344,8 +294,8 @@
     var circleHour = svg.append('circle')
         .attr('id', 'circleHour')
         .attr('r', 3)
-        .attr('cx', (centerX) + (radio + 12) * Math.sin(grados_a_radianes(180 + 360 - currentHourRotation)))
-        .attr('cy', (centerY) + (radio + 12) * Math.cos(grados_a_radianes(180 + 360 - currentHourRotation)))
+        .attr('cx', centerX + (radio + 12) * Math.sin(grados_a_radianes(180 + 360 - currentHourRotation)))
+        .attr('cy', centerY + (radio + 12) * Math.cos(grados_a_radianes(180 + 360 - currentHourRotation)))
         .attr('stroke-width', '2')
         .attr('stroke', '#BCD5D5')
         .attr('fill', '#BCD5D5');
@@ -356,16 +306,13 @@
             currentHourRotation = horaRotation((60 * date.getHours()) + date.getMinutes()),
             calc = grados_a_radianes(180 + 360 - currentHourRotation);
 
-
         circleHour.transition()
-            .attr('cx', (centerX) + radioHours * Math.sin(calc))
-            .attr('cy', (centerY) + radioHours * Math.cos(calc))
+            .attr('cx', centerX + radioHours * Math.sin(calc))
+            .attr('cy', centerY + radioHours * Math.cos(calc))
             .attr('r', function() {
-                //var that = d3.select(this);
                 return ((circleHour.attr('r') != 3) ? 3 : 1);
             });
     }, 1000);
-
 
     // DIBUJO LAS 24 HORAS
 
@@ -374,8 +321,7 @@
         lnHoras = 24;
 
     for (n = 0; n < lnHoras; n++) {
-        rotation = 180 - (360 / lnHoras) * n; //24h
-        //console.log (rotation)
+        rotation = 180 - (360 / lnHoras) * n;
         grupoHoras.append('text')
             .text(((n > 9) ? n : "0" + n) + ':00')
             .attr('x', (radio + 33) * Math.sin(grados_a_radianes(rotation)))
@@ -405,25 +351,21 @@
         .attr('text-anchor', 'start')
         .style('font-size', '14')
         .style('font-family', 'Roboto Slab, Helvetica Neue, Helvetica, sans-serif')
-        .attr('fill', '#666');
-
-    var horaBloque = desglose.append('text')
+        .attr('fill', '#666'),
+    horaBloque = desglose.append('text')
         .text("21:00h")
         .attr('y', formulaRadioDesglose + 62)
         .attr('text-anchor', 'start')
         .style('font-size', '27')
         .style('font-family', 'Roboto Slab, Helvetica Neue, Helvetica, sans-serif')
-        .attr('fill', '#666');
-
-    var desgloseBloqueRenovable = desglose.append('g');
-
-    var altoRenovables = desgloseBloqueRenovable.append('rect')
+        .attr('fill', '#666'),
+    desgloseBloqueRenovable = desglose.append('g'),
+    altoRenovables = desgloseBloqueRenovable.append('rect')
         .attr('x', -8)
         .attr('width', 2)
         .attr('height', 200)
-        .attr('fill', '#669C83')
-
-    var textoRenovables = desgloseBloqueRenovable.append('text')
+        .attr('fill', '#669C83'),
+    textoRenovables = desgloseBloqueRenovable.append('text')
         .text("--")
         .attr('text-anchor', 'middle')
         .style('font-size', '13')
@@ -434,30 +376,24 @@
         .attr('transform', 'rotate(-90)')
 
 
-    //PINTO EL TOOLTIP
+    // PINTO EL TOOLTIP
     var tooltipWidth = 120,
         tooltipHeight = 28,
-        currentTooltipFormat;
-
-    var tooltip = svg.append('g').attr('id', 'dem-tooltip').attr('opacity', 0);
-
-    var tooltip_shadow = tooltip.append('rect')
+        currentTooltipFormat,
+        tooltip = svg.append('g').attr('id', 'dem-tooltip').attr('opacity', 0),
+        tooltip_shadow = tooltip.append('rect')
         .attr({
             'width': tooltipWidth + 4,
             'height': tooltipHeight + 4,
             'fill': 'black',
             'fill-opacity': .15
-        })
-
-    var tooltip_rect = tooltip.append('rect')
+        }),
+        tooltip_rect = tooltip.append('rect')
         .attr({
-
             'width': tooltipWidth,
             'height': tooltipHeight
-        })
-
-
-    var tooltip_fecha = tooltip.append('text')
+        }),
+        tooltip_fecha = tooltip.append('text')
         .attr('id', 'fecha')
         .attr('x', 5)
         .attr('y', 11)
@@ -465,10 +401,8 @@
         .style('font-size', '11')
         .style('font-family', 'Roboto Slab, Helvetica Neue, Helvetica, sans-serif')
         .style('fill', 'black')
-        .style('fill-opacity', .75);
-
-
-    var tooltip_mw = tooltip.append('text')
+        .style('fill-opacity', .75),
+        tooltip_mw = tooltip.append('text')
         .text('')
         .attr('x', 15)
         .attr('y', 24)
@@ -477,7 +411,6 @@
         .style('fill', 'white');
 
 
-    var isOuterRadio = 0;
 
     function setTooltip(name) {
 
@@ -669,15 +602,7 @@
         .range([0, radio]);
 
     var dispatch = d3.dispatch("mouseenter");
-
-    //dispatch.on("mouseenter", pintaDesglose)
     dispatch.on("mouseenter", debounce(pintaDesglose, 125))
-
-
-
-    //var myEfficientFn = debounce(function() {}, 250);
-
-    //window.addEventListener('resize', myEfficientFn);
 
 
     //http://davidwalsh.name/javascript-debounce-function
@@ -703,15 +628,12 @@
         };
     };
 
-
     function pintaDesglose(evt, datos) {
 
         // CALCULAMOS LA SUMA DE LAS DIFERENTES ENERGÍAS PROVEEDORAS
-        var generadoras = [datos.eol, datos.hid, datos.sol, datos.aut, datos.gf, datos.nuc, datos.car, datos.cc];
-        // CALCULAMOS LOS PORCENTAJES PARCIALES
-        var porcentajesDemanda = calcArrayPercents(generadoras);
-        //DEMANDA REAL, ES DECIR POR MEDIO GENERATIVO SUMANDO TODO (PROTOTIPO de ARRAY)
-        var demandaHora = generadoras.sum(true);
+        var generadoras = [datos.eol, datos.hid, datos.sol, datos.aut, datos.gf, datos.nuc, datos.car, datos.cc],
+            porcentajesDemanda = calcArrayPercents(generadoras),
+            demandaHora = generadoras.sum(true);
 
 
 
@@ -745,9 +667,8 @@
             .text(ES.timeFormat("%H:%M")(tsDate) + "h")
 
         var scaleDesglose = d3.scale.linear()
-            .range([0, formulaRadioDesglose]);
-
-        var tabla = [];
+            .range([0, formulaRadioDesglose]),
+            tabla = [];
 
         for (i = 0; i < tablaIdsOrdenados.length; i++) {
             tabla[i] = {
@@ -876,19 +797,9 @@
 
             acumuladoInner += grosorGeneradora;
         })
-
-
-
     }
 
-
-
-
-
     function getData(path) {
-
-        //console.log('get', path)
-        //d3.json("datos/demandaGeneracionPeninsula.24.3.2015.json", function(data) {
 
         d3.json(path, function(error, data) {
 
@@ -917,26 +828,44 @@
             datosJson.reverse();
 
 
-            // GUARDO MEDIAS DE CADA CATEGORÍA
-            // tablaIdsOrdenados[id,id,...]
-            /*
-
-                tablaIdsConsumos = {
-                        'eol': {
-                            'med24h':0,
-                            'percent24h':0
-
-            
-            for (var i = 0; i<tablaIdsOrdenados.length;i++){
-                //d3.mean(datosJson, function(d) { return d[id];}))
-
-                tablaIdsConsumos[tablaIdsOrdenados[i]].med24h = d3.mean(datosJson, function(d) { return d[tablaIdsOrdenados[i]];}))
-                
-            }
-            */
-
             var maxDemand = d3.max(datosJson, demFn),
-                minDemand = d3.min(datosJson, demFn)
+                minDemand = d3.min(datosJson, demFn),
+                generadoras = [];
+
+            //RESET
+
+            for (key in tablaIdsConsumos) {
+
+                tablaIdsConsumos[key].percent24h = [];
+                tablaIdsConsumos[key].med24h = 0;
+            }
+
+            datosJson.forEach(function(value) {
+
+                var generadoras = [],
+                    porcentajesDemanda,
+                    key,
+                    i = 0;
+
+                //RESET
+
+                for (key in tablaIdsConsumos) {
+                    generadoras.push(value[key]);
+                }
+
+                porcentajesDemanda = calcArrayPercents(generadoras);
+
+                for (key in tablaIdsConsumos) {
+                    tablaIdsConsumos[key].percent24h.push(porcentajesDemanda[i]);
+                    i++;
+                }
+
+            })
+
+            for (key in tablaIdsConsumos) {
+                tablaIdsConsumos[key].med24h = d3.mean(tablaIdsConsumos[key].percent24h);
+            }
+
 
             console.log('min', minDemand, 'max', maxDemand, 'length', datosJson.length);
 
@@ -960,6 +889,7 @@
             if (!isOuterRadio) {
                 dispatch.mouseenter(this, datosJson[datosJson.length - 1]);
             }
+
             // SELECCIONO LOS RADIOS QUE ALBERGAN CADA UNA DE LAS FRANJAS DE TIEMPO
 
             var rads = svg.select('#hostRads').selectAll('.rad')
@@ -1088,14 +1018,10 @@
                 paths = d3.select(this).selectAll('path')
 
                 // CALCULAMOS LA SUMA DE LAS DIFERENTES ENERGÍAS PROVEEDORAS
-                var generadoras = [d.eol, d.hid, d.sol, d.aut, d.gf, d.nuc, d.car, d.cc];
-                // CALCULAMOS LOS PORCENTAJES PARCIALES
-                var porcentajesDemanda = calcArrayPercents(generadoras);
-                //DEMANDA REAL, ES DECIR POR MEDIO GENERATIVO SUMANDO TODO (PROTOTIPO de ARRAY)
-                var demandaHora = generadoras.sum(true);
-                //console.log('demandaHora', demandaHora, porcentajesDemanda)
-
-                var acumuladoInner = 0,
+                var generadoras = [d.eol, d.hid, d.sol, d.aut, d.gf, d.nuc, d.car, d.cc],
+                    porcentajesDemanda = calcArrayPercents(generadoras),
+                    demandaHora = generadoras.sum(true),
+                    acumuladoInner = 0,
                     grosorGeneradora = 0,
                     ln = porcentajesDemanda.length,
                     n = 0,
@@ -1147,21 +1073,14 @@
                 });
 
 
-            var energias,
+
+            var dLast = lastJsonData = datosJson[datosJson.length - 1],
+                generadoras = [dLast.eol, dLast.hid, dLast.sol, dLast.aut, dLast.gf, dLast.nuc, dLast.car, dLast.cc],
+                porcentajesDemanda = calcArrayPercents(generadoras),
+                demandaHora = generadoras.sum(true),
                 id;
 
-            //console.log('datosJson', datosJson)
-            var dLast = lastJsonData = datosJson[datosJson.length - 1];
-            // CALCULAMOS LA SUMA DE LAS DIFERENTES ENERGÍAS PROVEEDORAS
-            var generadoras = [dLast.eol, dLast.hid, dLast.sol, dLast.aut, dLast.gf, dLast.nuc, dLast.car, dLast.cc];
-            // CALCULAMOS LOS PORCENTAJES PARCIALES
-            var porcentajesDemanda = calcArrayPercents(generadoras);
-            //DEMANDA REAL, ES DECIR POR MEDIO GENERATIVO SUMANDO TODO (PROTOTIPO de ARRAY)
-            var demandaHora = generadoras.sum(true);
-
-
             //ACTUALIZO HTML
-
 
             var energias = d3.select('#energias').selectAll(".energia")
                 .data(tablaIdsOrdenados);
@@ -1196,7 +1115,7 @@
                     });
                 that.select('.j-porcentaje-media-' + id)
                     .text(function() {
-                        return "--";
+                        return ES.numberFormat(",.2f")(tablaIdsConsumos[id].med24h) + "%";
                     });
                 that.select('.j-aportacion-media-' + id)
                     .text(function() {
@@ -1224,7 +1143,6 @@
 
 
         })
-
     }
 
 
