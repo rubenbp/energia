@@ -773,17 +773,17 @@
                         .attr('height', grosorGeneradora);
 
                     that.select('.j-nombre')
-                        .transition()
                         .text(function(d) {
                             return tablaIdsInfo[d.id].nombreAbrev + " ";
                         })
+                        .transition()
                         .attr('transform', 'translate(' + safeStepCalc + ',' + 0 + ') ' + 'rotate(-45 0 0) ');
 
                     that.select('.j-MW')
-                        .transition()
                         .text(function(d) {
                             return ES.numberFormat(",.2f")(porcentajesDemanda[i]) + "% " + ES.numberFormat(",.")(d.datos) + "MW ";
                         })
+                        .transition()
                         .attr('transform', 'translate(' + safeStepCalc + ',' + 0 + ') ' + 'rotate(-45 0 0) ');
 
                     that.select('path')
@@ -902,7 +902,7 @@
                 .attr('class', 'rad')
                 .attr('id', function(d) {
                     var ts = iso.parse(d.ts)
-                    return 'id-' + ts.getHours() + ':' + ts.getMinutes() + '-dia-' + (ts.getDate());
+                    return ['id-' , ts.getHours() , ':' , ts.getMinutes() , '-dia-' , ts.getDate()].join("");
                 })
                 .on('mouseenter', function(d) {
 
@@ -921,12 +921,13 @@
                     consumoDot
                         .attr('cx', centerX + (consumoRadio * sinA))
                         .attr('cy', centerY + (consumoRadio * cosA))
+                        .attr('fill-opacity', 1)
                         .transition(150)
                         .attr('fill', colorDemand(d.dem))
-                        .attr('fill-opacity', 1);
+                        
 
                     tooltip
-                        .attr('transform', 'translate(' + (centerX + ((consumoRadio) * sinA)) + ',' + (centerY + ((consumoRadio) * cosA)) + ')')
+                        .attr('transform', 'translate(' + (centerX + (consumoRadio * sinA)) + ',' + (centerY + (consumoRadio * cosA)) + ')')
 
                     tooltip_fecha
                         .text(function() {
@@ -940,12 +941,12 @@
                         });
 
                     tooltip_rect
+                        .attr('fill-opacity', 1)
                         .transition(150)
-                        .attr('fill', colorDemand(d.dem))
-                        .attr('fill-opacity', 1);
-
-
+                        .attr('fill', colorDemand(d.dem));
+                        
                     consumoCircle
+                        .attr('stroke-opacity',.9)
                         .transition()
                         .attr({
                             'r': function() {
@@ -953,8 +954,7 @@
                             },
                             'stroke': function() {
                                 return colorDemand(d.dem);
-                            },
-                            'stroke-opacity': .9
+                            }
                         })
 
 
@@ -977,12 +977,12 @@
                         })
                     .on('mouseover', function() {
                         var that = d3.select(this);
-                        that.transition()
+                        that
                             .attr('fill', '#' + tablaIdsInfo[that.datum()].highlightColor);
                     })
                     .on('mouseout', function() {
                         var that = d3.select(this);
-                        d3.select(this).transition()
+                        that
                             .attr('fill', '#' + tablaIdsInfo[that.datum()].color);
                     })
                     .attr('fill', function(d, n) {
@@ -1074,7 +1074,6 @@
 
             var energias = d3.select('#energias').selectAll(".energia")
                 .data(tablaIdsOrdenados);
-
 
             energias.each(function(d, i) {
 
