@@ -1,13 +1,13 @@
-﻿<html>
+<html>
 
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="Visualización de la demanda eléctrica en las últimas horas en España">
     <meta name="keywords" content="Design, interactive, D3, experimental, spain, energy, renewable energy, energías renovables, interactivo, infografía, visualización, experimento">
-    <meta property="og:image" content="imgs/energy.spain.24h.png">
-    <meta name="twitter:creator" content="@ningunaparte"/>
+    <meta property="og:image" content="http://energia.ningunaparte.net/imgs/captura-big.png">
+    <meta name="twitter:creator" content="@ningunaparte" />
     <meta name="author" content="Víctor San Vicente">
-    <title>Visualización 24 últimas horas Energía Consumida España - dev alpha </title>
+    <title>Visualización 24 últimas horas Energía Consumida España - beta </title>
     <link rel="stylesheet" href="css/energia-font.css">
     <link rel="stylesheet" href="css/d3.css">
     <!-- For IE 9 and below. ICO should be 32x32 pixels in size -->
@@ -17,29 +17,27 @@
     <!-- Firefox, Chrome, Safari, IE 11+ and Opera. 196x196 pixels in size. -->
     <link rel="icon" href="imgs/fav/favicon.png">
     <script>
-        (function(i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r;
-            i[r] = i[r] || function() {
-                (i[r].q = i[r].q || []).push(arguments)
-            }, i[r].l = 1 * new Date();
-            a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0];
-            a.async = 1;
-            a.src = g;
-            m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    (function(i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function() {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-        ga('create', 'UA-62220959-1', 'auto');
-        ga('send', 'pageview');
+    ga('create', 'UA-62220959-1', 'auto');
+    ga('send', 'pageview');
     </script>
 </head>
 
 <body>
     <div class="container">
-        <!--<input type="button" class='testbtn' value="REFRESH" id="updateBtn"> -->
         <h2 class='visualizacion__title'>Generación Eléctrica España - Últimas 24 horas<sup>BETA</sup></h2>
         <h3 class='visualizacion__subtitle'>Estructura de generación</h3>
-        <!--<p class='j-log'></p>-->
         <section id="chart" class='chart'></section>
         <section id="energias">
             <h3 class='visualizacion__subtitle'>Últimas lécturas</h3>
@@ -252,12 +250,23 @@
                 </dl>
             </div>
         </section>
-        <footer><div class="credits"><p class="visualizacion__subtitle" >visualización <a href="http://www.ningunaparte.net">Víctor San Vicente</a> con <a href="http://mbostock.github.com/d3/">d3</a>, datos publicados por <a href="http://www.ree.es/es">REE</a>.</p></div></footer>
+        <footer>
+            <div class="credits">
+                <p class="visualizacion__subtitle">visualización <a href="http://www.ningunaparte.net">Víctor San Vicente</a> con <a href="http://mbostock.github.com/d3/">d3</a>, datos publicados por <a href="http://www.ree.es/es">REE</a>.</p>
+            </div>
+            <div class="share">
+                <p>Compartir en</p>
+                <a href="https://twitter.com/intent/tweet?text=Interactivo generación eléctrica España&url=http://ow.ly/MApQy&hashtags=dataviz,d3js&via=ningunaparte" target="_blank" class="twitter"></a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=http://ow.ly/MApQy"
+   target="_blank" class="facebook"></a>
+                <a href="https://www.pinterest.com/pin/create/button/?url=http://ow.ly/MApQy&media=http://energia.ningunaparte.net/imgs/captura-big.png&description=Visualización sobre el consumo eléctrico España - Visualization Spain energy generation&hashtags=dataviz,d3js,infographic,energy" 
+   target="_blank" class="pinterest"></a>
+            </div>
+        </footer>
     </div>
-    
     <script src="js/d3.v3.min.js"></script>
     <script src="script.js"></script>
-    <!-- -->
+    
 </body>
 
 </html>

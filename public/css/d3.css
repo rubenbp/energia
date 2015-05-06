@@ -199,9 +199,44 @@ a:active {
     color: #FFF;
 }
 
-
 .credits {
-  padding: 15px;
+  padding: 15px 15px 0 15px;
   text-align: center;
 }
 
+.share {
+    overflow: hidden;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.share p {
+    text-align: center;
+    color: #666;
+    margin-bottom:5px;
+}
+
+.share a {
+    width: 63px;
+    height: 63px;
+    display: inline-block;
+    background: url("../imgs/social-gadget-sprite-693x189.png") 0 0 no-repeat;
+    border-radius: 75%;
+    overflow: hidden;
+}
+
+a.twitter {
+    background-position: -504px 0;
+}
+
+a.facebook {
+    background-position: 0 0;
+}
+
+a.pinterest {
+    background-position: -315px 0;
+}
+
+.share a:hover {
+  background-position-y: -127px;
+}

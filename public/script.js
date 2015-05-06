@@ -234,6 +234,23 @@
         .attr('width', canvasWidth)
         .attr('height', canvasHeight)
 
+    var defs = svg.append("defs"),
+        filter = defs.append("filter")
+            .attr("id", "brightness"),
+        feComponent = filter.append("feComponentTransfer");
+            feComponent.append('feFuncR')
+                .attr('type', 'linear')
+                .attr('slope', '1.25')
+            feComponent.append('feFuncG')
+                .attr('type', 'linear')
+                .attr('slope', '1.25')
+            feComponent.append('feFuncB')
+                .attr('type', 'linear')
+                .attr('slope', '1.25')
+    
+   //.style("filter", "url(#brightness)")  
+
+
     svg.append('rect')
         .attr('id', 'bg')
         .attr({
@@ -273,11 +290,10 @@
     var groupConsumo = svg.append('g').attr('id', 'consumo-dot'),
         consumoDot = groupConsumo.append('circle')
         .attr('r', 5)
-        .attr('cx', centerX)
-        .attr('cy', centerY)
+        .attr('cx', -9999)
+        .attr('cy', -9999)
         .attr('stroke', 'none')
         .attr('fill', '#900')
-        .attr('fill-opacity', 0);
 
 
     var grupoHoras = d3.select("svg #horas")
@@ -908,6 +924,9 @@
 
                     dispatch.mouseenter(this, d);
 
+                    /*var that = d3.select(this)
+                        that.style("filter", "url(#brightness)")  */
+
                     var tsDate = iso.parse(d.ts),
                         h = tsDate.getHours(),
                         m = tsDate.getMinutes(),
@@ -921,7 +940,7 @@
                     consumoDot
                         .attr('cx', centerX + (consumoRadio * sinA))
                         .attr('cy', centerY + (consumoRadio * cosA))
-                        .attr('fill-opacity', 1)
+                        //.attr('fill-opacity', 1)
                         .transition(150)
                         .attr('fill', colorDemand(d.dem))
                         
@@ -959,7 +978,14 @@
 
 
 
-                })
+                })/*
+                .on('mouseleave',function(){
+
+                    var that = d3.select(this);
+                        that.style("filter", "none")  
+
+
+                })*/
                 .each(function(d) {
 
                     //CREO LOS 'HUECOS'
