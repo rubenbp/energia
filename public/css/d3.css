@@ -236,7 +236,9 @@ a.facebook {
 a.pinterest {
     background-position: -315px 0;
 }
-
+a.googleplus {
+    background-position: -189px 0;
+}
 .share a:hover {
   background-position-y: -127px;
 }
