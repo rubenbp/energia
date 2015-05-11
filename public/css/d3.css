@@ -245,3 +245,10 @@ a.googleplus {
 .share a:hover {
   background-position-y: -127px;
 }
+.idioma {
+  display: inline-block;
+  float: right;
+  padding-right: 20px;
+  padding-top: 15px;
+  font-size: 0.8em;
+}
