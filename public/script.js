@@ -940,7 +940,6 @@
                     consumoDot
                         .attr('cx', centerX + (consumoRadio * sinA))
                         .attr('cy', centerY + (consumoRadio * cosA))
-                        //.attr('fill-opacity', 1)
                         .transition(150)
                         .attr('fill', colorDemand(d.dem))
                         
@@ -1098,7 +1097,7 @@
 
             //ACTUALIZO HTML
 
-            var energias = d3.select('#energias').selectAll(".energia")
+            var energias = d3.select('#j-energias').selectAll(".energia")
                 .data(tablaIdsOrdenados);
 
             energias.each(function(d, i) {
@@ -1161,9 +1160,11 @@
 
 
 
+    var baseUrl = "https://energia-ngpt.rhcloud.com/data/last24h";
 
-    setInterval(getData, 1000 * 30, "https://energia-ngpt.rhcloud.com/data/last24h");
-    getData("https://energia-ngpt.rhcloud.com/data/last24h");
+
+    setInterval(getData, 1000 * 30, baseUrl);
+    getData(baseUrl);
 
 
 })()

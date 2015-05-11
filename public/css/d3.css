@@ -105,10 +105,13 @@ p {
     color: #999;
 }
 
-#energias {
-  padding-top: 10px;
+#j-energias {
+  padding: 10px 0 20px 0;
   overflow: hidden;
   background-color: #222;
+}
+.energias {
+  overflow: hidden;
 }
 .title {
   padding: 15px 15px 0 0 ;  
