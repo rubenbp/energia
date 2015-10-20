@@ -598,9 +598,9 @@
 
             isOuterRadio = +(sqrt <= radio);
 
-            groupCircle.transition(100).style('opacity', isOuterRadio);
-            groupConsumo.transition(100).style('opacity', isOuterRadio);
-            tooltip.transition(100).style('opacity', isOuterRadio);
+            groupCircle.transition().duration(100).style('opacity', isOuterRadio);
+            groupConsumo.transition().duration(100).style('opacity', isOuterRadio);
+            tooltip.transition().duration(100).style('opacity', isOuterRadio);
 
             if (!isOuterRadio) {
                 dispatch.mouseenter(this, lastJsonData);
@@ -957,7 +957,8 @@
                     consumoDot
                         .attr('cx', centerX + (consumoRadio * sinA))
                         .attr('cy', centerY + (consumoRadio * cosA))
-                        .transition(150)
+                        .transition()
+                        .duration(150)
                         .attr('fill', colorDemand(d.dem))
                         
 
@@ -977,7 +978,8 @@
 
                     tooltip_rect
                         .attr('fill-opacity', 1)
-                        .transition(150)
+                        .transition()
+                        .duration(150)
                         .attr('fill', colorDemand(d.dem));
                         
                     consumoCircle
@@ -1090,7 +1092,7 @@
 
             });
 
-            rads.transition(500).delay(function(d, i) {
+            rads.transition().duration(500).delay(function(d, i) {
                     return (datosJson.length - i) * 25
                 })
                 .attr('opacity', function(d, i) {
